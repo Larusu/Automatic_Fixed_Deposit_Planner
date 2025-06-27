@@ -4,17 +4,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.io.File;
 
 public class CreateDB {
 
     static final String DB_URL = "jdbc:sqlite:db/database.db";
 
-    private static Connection connect(){
+    public static Connection connect(){
 
         try {
             return DriverManager.getConnection(DB_URL);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
