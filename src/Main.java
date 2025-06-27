@@ -1,21 +1,16 @@
-package src;
+import dbcode.CreateDB;
 
 import java.util.Properties;
-
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-
 import org.jdatepicker.impl.*;
 
-import src.DateFomat.DateLabelFormatter;
+import DateFomat.DateLabelFormatter;
 
 public class Main {
     
     public static void main(String[] args) {
+
+        CreateDB.InitializeDatabase();
         
         JFrame frame = new JFrame("Date Picker Example");
         frame.setSize(300, 200);
@@ -34,7 +29,4 @@ public class Main {
         frame.getContentPane().add(datePicker);
         frame.setVisible(true);
     }
-    
-
-    // code to ni lars
 }
