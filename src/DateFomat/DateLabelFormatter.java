@@ -2,10 +2,10 @@ package src.DateFomat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Properties;
+// import java.util.Properties;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 
-//kay lars2
+//kay lars2sdadsadsadasd
 
 public class DateLabelFormatter extends AbstractFormatter {
     private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
