@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Properties;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 
+//kay lars2
 
 public class DateLabelFormatter extends AbstractFormatter {
     private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -23,5 +24,3 @@ public class DateLabelFormatter extends AbstractFormatter {
         return "";
     }
 }
-
-//code to ni jhervis
