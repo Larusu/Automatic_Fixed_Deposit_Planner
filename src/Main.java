@@ -2,7 +2,13 @@ package src;
 
 import java.util.Properties;
 
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+
 import org.jdatepicker.impl.*;
 
 import src.DateFomat.DateLabelFormatter;
