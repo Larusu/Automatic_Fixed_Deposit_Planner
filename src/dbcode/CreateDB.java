@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.io.File;
 
 public class CreateDB {
 
-    static final String DB_URL = "jdbc:mysql:db/database.db";
+    static final String DB_URL = "jdbc:sqlite:db/database.db";
 
     private static Connection connect(){
 
@@ -39,7 +40,7 @@ public class CreateDB {
             "deposit_id INTEGER NOT NULL, " +
             "maturity_amount REAL NOT NULL, " +
             "total_interest REAL NOT NULL, " +
-            "estimated_tax REAL NOT NULL), " +
+            "estimated_tax REAL NOT NULL, " +
             "FOREIGN KEY (deposit_id) REFERENCES deposits(id) ON DELETE CASCADE);";
 
             String maturity_schedule = "CREATE TABLE IF NOT EXISTS maturity_schedule(" +
