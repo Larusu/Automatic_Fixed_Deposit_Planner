@@ -2,6 +2,7 @@ package dbcode;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -23,8 +24,8 @@ public class DepositDAO {
         try (Connection conn = DatabaseInitializer.connect();
             PreparedStatement pstmt = conn.prepareStatement(sqlInsert)){
                 
-            pstmt.setString(1, String.valueOf(fields.get(0)));
-            pstmt.setString(2, String.valueOf(fields.get(1)));
+            pstmt.setDouble(1, (Double)fields.get(0));
+            pstmt.setDouble(2, (Double)fields.get(1));
             pstmt.setInt(3, (Integer)fields.get(2));
             pstmt.setString(4, String.valueOf(fields.get(3)));
             pstmt.setString(5, String.valueOf(fields.get(4)));
@@ -36,14 +37,48 @@ public class DepositDAO {
         }
     }
 
-
-    public String getDepositField(int id, String column){
+    public String getDepositSpecificField(int id, String columnName){
         // Returning a specific data from a specific field
-        
+        String sql = "SELECT " + columnName + " FROM deposits WHERE id = ?";
+        try (Connection conn = DatabaseInitializer.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
 
-
+            pstmt.setInt(1, id);
+            ResultSet field = pstmt.executeQuery();
+            
+            if(field.next()){
+                return String.valueOf(field.getString(columnName));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
+
+    public String getDepositField(int id){
+
+        String depositField = "";
+        String sql = "SELECT * FROM deposits WHERE id = ?";
+        try (Connection conn = DatabaseInitializer.connect();
+        PreparedStatement pstmt = conn.prepareStatement(sql)){
+            
+            pstmt.setInt(1, id);
+            ResultSet field = pstmt.executeQuery();
+            
+            if(field.next()){
+                for(int i = 1; i < 8; i++){
+                    depositField += String.valueOf(field.getString(i)) + " ";
+                }
+                depositField += String.valueOf(field.getString(8));
+            }
+
+            return depositField;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     public void updateDepositField(int id, String column, Object newValue){
 
     }
