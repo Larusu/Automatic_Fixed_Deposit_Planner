@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DepositDAO {
 
@@ -38,7 +40,9 @@ public class DepositDAO {
     }
 
     public String getDepositSpecificField(int id, String columnName){
-        // Returning a specific data from a specific field
+        // Returning a specific data from a specific field 
+        if (checkColumnName(columnName)) return null; 
+
         String sql = "SELECT " + columnName + " FROM deposits WHERE id = ?";
         try (Connection conn = DatabaseInitializer.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -79,8 +83,44 @@ public class DepositDAO {
         return null;
     }
     
-    public void updateDepositField(int id, String column, Object newValue){
+    public void updateDepositField(int id, ArrayList<String> columnName, ArrayList<Object> newValue){
+        // Updating specified column with new values
+        if (columnName.size() != newValue.size()) {
+            System.out.println("Mismatch between column names and values.");
+            return;
+        }
 
+        StringBuilder fields = new StringBuilder();
+        for(int i = 0; i < columnName.size(); i++){
+            if (checkColumnName(columnName.get(i)))  return; 
+            
+            fields.append(columnName.get(i)).append(" = ?");
+            if (i < columnName.size() - 1) {
+                fields.append(", ");
+            }
+        }
+
+        String sql = "UPDATE deposits SET " + fields + "  WHERE id = ?";
+        try (Connection conn = DatabaseInitializer.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+            for(int i = 0; i < newValue.size(); i++){
+                if(newValue.get(i) instanceof Integer){
+                    pstmt.setInt(i + 1, (Integer)newValue.get(i));
+                }else if(newValue.get(i) instanceof Double){
+                    pstmt.setDouble(i + 1, (Double)newValue.get(i));
+                }
+                else if(newValue.get(i) instanceof String){
+                    pstmt.setString(i + 1, String.valueOf(newValue.get(i)));
+                }
+            }
+            pstmt.setInt(columnName.size() + 1, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Updated row with id " + id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteDepositById(int id){
@@ -110,5 +150,19 @@ public class DepositDAO {
             e.printStackTrace();
         }
         DatabaseInitializer.initializeDatabase();
+    }
+
+    private boolean checkColumnName(String columnName){
+
+        List<String> allowedColumns = Arrays.asList(
+            "principal_amount", "interest_rate", "duration_value", "duration_unit",
+            "compounding_frequency", "start_date", "estimate_tax"
+        );
+        
+        if (!allowedColumns.contains(columnName)) {
+            System.out.println("Invalid column name: " + columnName);
+            return true;
+        }
+        return false;
     }
 }
