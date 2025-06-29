@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class CreateDB {
+public class DatabaseInitializer {
 
     static final String DB_URL = "jdbc:sqlite:db/database.db";
 
@@ -19,7 +19,7 @@ public class CreateDB {
         }
     }
     
-    public static void InitializeDatabase(){
+    public static void initializeDatabase(){
 
         try(Connection conn = connect(); 
             Statement stmt = conn.createStatement();)

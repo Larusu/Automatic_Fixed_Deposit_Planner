@@ -7,9 +7,9 @@ import java.sql.Statement;
 
 public class DepositDAO {
     
-    public void insertDeposit(int id, String what, Object value){
+    public void insertDepositField(int id, String what, Object value){
 
-        try (Connection conn = CreateDB.connect();
+        try (Connection conn = DatabaseInitializer.connect();
             Statement stmt = conn.createStatement()){
 
             String sqlInsert = "INSERT INTO deposits(" + what + ")VALUES(?)";

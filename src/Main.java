@@ -1,4 +1,4 @@
-import dbcode.CreateDB;
+import dbcode.DatabaseInitializer;
 
 import java.util.Properties;
 import javax.swing.JFrame;
@@ -10,7 +10,7 @@ public class Main {
     
     public static void main(String[] args) {
 
-        CreateDB.InitializeDatabase();
+        DatabaseInitializer.initializeDatabase();
         
         JFrame frame = new JFrame("Date Picker Example");
         frame.setSize(300, 200);
