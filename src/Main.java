@@ -1,19 +1,20 @@
 import dbcode.DatabaseInitializer;
 
-import java.util.Properties;
-import javax.swing.JFrame;
-import org.jdatepicker.impl.*;
-
-import DateFomat.DateLabelFormatter;
 
 public class Main {
     
     public static void main(String[] args) {
-
+        
         DatabaseInitializer.initializeDatabase();
         
     }
 }
+// import java.util.Properties;
+// import javax.swing.JFrame;
+// import org.jdatepicker.impl.*;
+
+// import DateFomat.DateLabelFormatter;
+
 // // Configure the date picker
 // UtilDateModel model = new UtilDateModel();
 // Properties p = new Properties();
