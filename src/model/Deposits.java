@@ -1,4 +1,4 @@
-package dbcode;
+package model;
 
 public class Deposits {
 
@@ -10,7 +10,7 @@ public class Deposits {
     private String startDate;
     private int estimateTax;
 
-    public Deposits(double principal, double interestRate, int durationValue, String durationUnit,
+    Deposits(double principal, double interestRate, int durationValue, String durationUnit,
                    String compoundingFrequency, String startDate, int estimateTax) {
         this.principal = principal;
         this.interestRate = interestRate;

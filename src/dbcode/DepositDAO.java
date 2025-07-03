@@ -2,6 +2,8 @@ package dbcode;
 
 import java.util.ArrayList;
 
+import model.Deposits;
+
 public class DepositDAO extends CrudDAO<Deposits> {
 
     @Override
