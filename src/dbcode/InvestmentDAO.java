@@ -1,4 +1,4 @@
-package model;
+package dbcode;
 
 public class InvestmentDAO {
     
