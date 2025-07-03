@@ -12,7 +12,10 @@ public class DatabaseInitializer {
     public static Connection connect(){
 
         try {
-            return DriverManager.getConnection(DB_URL);
+            Connection conn = DriverManager.getConnection(DB_URL);
+            Statement stmt = conn.createStatement();
+            stmt.execute("PRAGMA foreign_keys = ON"); // to enable foreign key
+            return conn;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

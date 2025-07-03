@@ -17,6 +17,6 @@ public class Investment {
 
     public int getDepositId(){ return deposit_id; }
     public double getMaturityAmount(){ return maturity_amount;}
-    public double getMTotalInterest(){ return total_interest;}
+    public double getTotalInterest(){ return total_interest;}
     public double getEstimateTax(){ return estimated_tax;}
 }

@@ -8,21 +8,23 @@ public class InvestmentDAO extends CrudDAO<Investment>{
 
     @Override
     protected String getTableName() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTableName'");
+        return "investments";
     }
 
     @Override
     protected String getColumnName() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getColumnName'");
+        return "deposit_id, maturity_amount, total_interest, estimated_tax";
     }
 
     @Override
-    protected ArrayList<Object> InsertData(Investment elements) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'InsertData'");
-    }
-    
+    protected ArrayList<Object> InsertData(Investment i) {
 
+       ArrayList<Object> fields = new ArrayList<>();
+        fields.add(i.getDepositId());
+        fields.add(i.getMaturityAmount());
+        fields.add(i.getTotalInterest());
+        fields.add(i.getEstimateTax());
+
+        return fields;
+    }
 }
