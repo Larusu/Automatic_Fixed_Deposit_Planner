@@ -36,7 +36,7 @@ public abstract class CrudDAO<T> {
 
     public String getField(int id, String column) {
         // Returning a specific data from a specific field
-        if (validateColumnName(column))
+        if (!validateColumnName(column))
             return "Invalid column name";
 
         String sql = "SELECT " + column + " FROM " + getTableName() + " WHERE id = ?";
@@ -55,10 +55,10 @@ public abstract class CrudDAO<T> {
         return null;
     }
 
-    public void updateDepositField(int id, ArrayList<String> columnName, ArrayList<Object> newValue) {
+    public void updateField(int id, ArrayList<String> columnName, ArrayList<Object> newValue) {
         // Updating specified column with new values
-        if ((columnName.size() != newValue.size()) || validateColumnName(columnName)) {
-            System.err.println("Error input on updateDepositField()");
+        if ((columnName.size() != newValue.size()) || !validateColumnName(columnName)) {
+            System.err.println("Error input on updateField()");
             return;
         }
         String sqlUpdate = "UPDATE " + getTableName() + " SET " + getPlaceholder(columnName) + "  WHERE id = ?";
