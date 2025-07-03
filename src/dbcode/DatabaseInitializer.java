@@ -35,7 +35,7 @@ public class DatabaseInitializer {
             "duration_unit TEXT NOT NULL," +
             "compounding_frequency TEXT NOT NULL," +
             "start_date TEXT NOT NULL," +
-            "estimate_tax INTEGER NOT NULL);";
+            "is_tax_applied INTEGER NOT NULL);";
 
             String investments = "CREATE TABLE IF NOT EXISTS investments(" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +

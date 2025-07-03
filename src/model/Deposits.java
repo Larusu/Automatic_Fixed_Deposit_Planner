@@ -8,17 +8,17 @@ public class Deposits {
     private String durationUnit;
     private String compoundingFrequency;
     private String startDate;
-    private int estimateTax;
+    private int is_tax_applied;
 
     Deposits(double principal, double interestRate, int durationValue, String durationUnit,
-                   String compoundingFrequency, String startDate, int estimateTax) {
+                   String compoundingFrequency, String startDate, int is_tax_applied) {
         this.principal = principal;
         this.interestRate = interestRate;
         this.durationValue = durationValue;
         this.durationUnit = durationUnit;
         this.compoundingFrequency = compoundingFrequency;
         this.startDate = startDate;
-        this.estimateTax = estimateTax;
+        this.is_tax_applied = is_tax_applied;
     }
     public double getPrincipal() { return principal; }
     public double getInterestRate() { return interestRate; }
@@ -26,5 +26,5 @@ public class Deposits {
     public String getDurationUnit() { return durationUnit; }
     public String getCompoundingFrequency() { return compoundingFrequency; }
     public String getStartDate() { return startDate; }
-    public int getEstimateTax() { return estimateTax; }
+    public int getIsTaxApplied() { return is_tax_applied; }
 }
