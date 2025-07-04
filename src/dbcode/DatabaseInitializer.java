@@ -29,6 +29,7 @@ public class DatabaseInitializer {
         { 
             String deposits = "CREATE TABLE IF NOT EXISTS deposits(" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "name TEXT NOT NULL," +
             "principal_amount REAL NOT NULL," +
             "interest_rate REAL NOT NULL," +
             "duration_value INTEGER NOT NULL," +

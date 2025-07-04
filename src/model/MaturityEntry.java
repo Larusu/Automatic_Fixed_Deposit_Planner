@@ -9,7 +9,7 @@ public class MaturityEntry{
     private double tax_deducted;
     private double total_balance;
 
-    MaturityEntry(int investment_id, int period_number, String date, double interest_earned,
+    public MaturityEntry(int investment_id, int period_number, String date, double interest_earned,
                 double tax_deducted, double total_balance){
         this.investment_id = investment_id;
         this.period_number = period_number;

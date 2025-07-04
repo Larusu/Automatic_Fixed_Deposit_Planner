@@ -7,7 +7,7 @@ public class Investment {
     private double total_interest;
     private double estimated_tax;
 
-    Investment(int deposit_id, double maturity_amount, double total_interest, int estimated_tax){
+    public Investment(int deposit_id, double maturity_amount, double total_interest, int estimated_tax){
 
         this.deposit_id = deposit_id;
         this.maturity_amount = maturity_amount;

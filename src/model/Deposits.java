@@ -2,6 +2,7 @@ package model;
 
 public class Deposits {
 
+    private String name;
     private double principal;
     private double interestRate;
     private int durationValue;
@@ -10,8 +11,9 @@ public class Deposits {
     private String startDate;
     private int is_tax_applied;
 
-    Deposits(double principal, double interestRate, int durationValue, String durationUnit,
+    public Deposits(String name, double principal, double interestRate, int durationValue, String durationUnit,
                    String compoundingFrequency, String startDate, int is_tax_applied) {
+        this.name = name;
         this.principal = principal;
         this.interestRate = interestRate;
         this.durationValue = durationValue;
@@ -20,6 +22,7 @@ public class Deposits {
         this.startDate = startDate;
         this.is_tax_applied = is_tax_applied;
     }
+    public String getName(){ return name; }
     public double getPrincipal() { return principal; }
     public double getInterestRate() { return interestRate; }
     public int getDurationValue() { return durationValue; }
