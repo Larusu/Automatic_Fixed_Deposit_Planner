@@ -3,6 +3,7 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import model.Deposits;
 
 public class DepositForm extends JFrame {
 
@@ -12,6 +13,7 @@ public class DepositForm extends JFrame {
     RoundedButton2 depositPlanButton;
     RoundedButton2 savedPlansListButton;
     RoundedButton2 exitButton;
+    Deposits addData; // name,principal amount, interest rate, duration value, duration unit, compounding freq, start data, tax applied
 
     public DepositForm() {
         setTitle("New Deposit Plan");
@@ -66,6 +68,9 @@ public class DepositForm extends JFrame {
         createDepositPlanName.setBorder(null);
         createDepositPlanName.setBounds(45,35,480,65);
 
+        JLabel principalAmount = new JLabel();
+        principalAmount.setText("Principal Amount");
+
         RoundedButton submitButton = new RoundedButton("SUBMIT", 30);
         submitButton.setBounds(45, 300, 100, 30);
 
@@ -102,11 +107,16 @@ public class DepositForm extends JFrame {
             System.exit(0);
         });
 
+        submitButton.addActionListener(e -> {
+            
+        });
+
         depositPlanButton.isSelected = true;
         depositPlanButton.setForeground(depositPlanButton.base);
         depositPlanButton.setBackground(depositPlanButton.hover);
 
         String planName = createDepositPlanName.getText();
+
 
         menuPanel.add(Box.createVerticalStrut(10));
         menuPanel.add(logoImage);
