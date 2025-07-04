@@ -22,7 +22,7 @@ public class MenuFrame extends JFrame {
         logoPanel.setBackground(Color.WHITE);
 
         JLabel logoImage = new JLabel();
-        ImageIcon rawIcon = new ImageIcon("img/logo.png");
+        ImageIcon rawIcon = new ImageIcon("img/logo_better_1.png");
         Image scaledImage = rawIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
         logoImage.setIcon(new ImageIcon(scaledImage));
         logoImage.setAlignmentX(Component.CENTER_ALIGNMENT);
