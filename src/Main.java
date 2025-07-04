@@ -1,5 +1,7 @@
-import dbcode.DatabaseInitializer;
+import javax.swing.SwingUtilities;
 
+import dbcode.DatabaseInitializer;
+import gui.MenuFrame;
 
 public class Main {
     
@@ -7,6 +9,7 @@ public class Main {
         
         DatabaseInitializer.initializeDatabase();
         
+        SwingUtilities.invokeLater(MenuFrame::new);
     }
 }
 // import java.util.Properties;
