@@ -16,7 +16,7 @@ public class InterestCalculator{
         case "weekly": return 52;
         case "daily": return 365;
         default: return 0;
-    }
+        }
     }
     public static double compoundInterest(String duration, int principal, double rate, int time){
 
@@ -24,14 +24,14 @@ public class InterestCalculator{
         if(freq == 0) return 0;
 
         // P(1 + r/n)^(nt)
-        BigDecimal n = BigDecimal.valueOf(freq);                                 // n    = amount of times the interest is compounded
-        BigDecimal r = new BigDecimal(rate).divide(BigDecimal.valueOf(100)); // r    = rate / 100 
-        BigDecimal base = BigDecimal.ONE.add(r.divide(n));                       // base = (1 + r/n)
-        int exponent = freq * time;                                              // ^(nt)
+        BigDecimal n = BigDecimal.valueOf(freq);                                           // n    = amount of times the interest is compounded
+        BigDecimal r = BigDecimal.valueOf(rate).divide(BigDecimal.valueOf(100));       // r    = rate / 100 
+        BigDecimal base = BigDecimal.ONE.add(r.divide(n, 20, RoundingMode.HALF_UP)); // base = (1 + r/n)
+        int exponent = freq * time;                                                        // ^(nt)
 
-        BigDecimal p = BigDecimal.valueOf(principal);               // p          = principal
-        BigDecimal result = base.pow(exponent);                     // result     = (1 + r/n)^(nt)
-        BigDecimal calculated = p.multiply(result);                 // calculated = p * result
+        BigDecimal p = BigDecimal.valueOf(principal); // p          = principal
+        BigDecimal result = base.pow(exponent);       // result     = (1 + r/n)^(nt)
+        BigDecimal calculated = p.multiply(result);   // calculated = p * result
 
         return calculated.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
