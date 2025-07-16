@@ -2,7 +2,6 @@ package logic;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 
 public class InterestCalculator{
 
@@ -11,13 +10,31 @@ public class InterestCalculator{
     // "https://taxsummaries.pwc.com/philippines/individual/taxes-on-personal-income#:~:text=For%20resident%20and%20non%2Dresident,rate%20is%20a%20flat%2025%25."
     private final int taxRate = 20; 
 
+    public enum Frequency 
+    {
+        ANNUALLY("Annually"),
+        SEMIANNUALLY("Semiannually"),
+        QUARTERLY("Quarterly"),
+        MONTHLY("Monthly"),
+        BIWEEKLY("Biweekly"),
+        WEEKLY("Weekly"),
+        DAILY("Daily");
+
+        private final String label;
+
+        Frequency(String label) { this.label = label; }
+
+        @Override
+        public String toString() { return label; }
+    }
+
     public static void main(String[] args) {
 
         InterestCalculator calc = new InterestCalculator();
         int principal = 1000;
         double rate = 1;
         int time = 5;
-        String duration = "monthly";
+        Frequency duration = Frequency.ANNUALLY;
         System.out.println("Principal: " + principal);
         System.out.println("Rate: " + rate + "%");
         System.out.println("Time: " + time + " years");
@@ -28,7 +45,7 @@ public class InterestCalculator{
         System.out.println("Maturity: " + calc.compoundInterest(principal, rate, duration, time));
     }
 
-    public double compoundInterest(int principal, double rate, String duration, int time)
+    public double compoundInterest(int principal, double rate, Frequency duration, int time)
     {
         int freq = strFrequency(duration);
         if(freq == 0) return 0;
@@ -46,7 +63,7 @@ public class InterestCalculator{
         return c.setScale(2, RoundingMode.HALF_UP).doubleValue(); // get 2 decimal places that is rounded
     }
 
-    public double compoundInterestWithTax(int principal, double rate, String duration, int time)
+    public double compoundInterestWithTax(int principal, double rate, Frequency duration, int time)
     {
         int freq = strFrequency(duration);
         if(freq == 0) return 0;
@@ -64,7 +81,7 @@ public class InterestCalculator{
         return c.setScale(2, RoundingMode.HALF_UP).doubleValue(); // get 2 decimal places that is rounded
     } 
 
-    public double totalTaxPaid(int principal, double rate, String duration, int time)
+    public double totalTaxPaid(int principal, double rate, Frequency duration, int time)
     {
         double d = compoundInterest(principal, rate, duration, time) - compoundInterestWithTax(principal, rate, duration, time);
 
@@ -73,17 +90,17 @@ public class InterestCalculator{
         return taxPaid.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
-    private int strFrequency(String frequency)
+    private int strFrequency(Frequency frequency)
     {
-        switch (frequency.toLowerCase()) 
+        switch (frequency) 
         {
-            case "annually": return 1;
-            case "semiannually": return 2;
-            case "quarterly": return 4;
-            case "monthly": return 12;
-            case "biweekly": return 26;
-            case "weekly": return 52;
-            case "daily": return 365;
+            case ANNUALLY: return 1;
+            case SEMIANNUALLY: return 2;
+            case QUARTERLY: return 4;
+            case MONTHLY: return 12;
+            case BIWEEKLY: return 26;
+            case WEEKLY: return 52;
+            case DAILY: return 365;
             default: return 0;
         }
     }
