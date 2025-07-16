@@ -1,16 +1,13 @@
 package logic;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class InterestCalculator{
-
-    InterestCalculator(String duration, int principal, double rate, int time){
-
-        compoundInterest(duration, principal, rate, time);
-    }
 
     private static int strFrequency(String frequency){
 
-        frequency = frequency.toLowerCase();
-        switch (frequency) {
+        switch (frequency.toLowerCase()) {
         case "annually": return 1;
         case "semiannually": return 2;
         case "quarterly": return 4;
@@ -21,22 +18,21 @@ public class InterestCalculator{
         default: return 0;
     }
     }
-    private static double compoundInterest(String duration, int principal, double rate, int time){
+    public static double compoundInterest(String duration, int principal, double rate, int time){
 
-        int n = strFrequency(duration);
-        if(n == 0) return 0;
+        int freq = strFrequency(duration);
+        if(freq == 0) return 0;
 
-        rate = rate / 100.0;
-        double base = 1 + (rate / n);
-        double exponent = n * time;
+        // P(1 + r/n)^(nt)
+        BigDecimal n = BigDecimal.valueOf(freq);                                 // n    = amount of times the interest is compounded
+        BigDecimal r = new BigDecimal(rate).divide(BigDecimal.valueOf(100)); // r    = rate / 100 
+        BigDecimal base = BigDecimal.ONE.add(r.divide(n));                       // base = (1 + r/n)
+        int exponent = freq * time;                                              // ^(nt)
 
-        double factor = 1.0;
-        for (int i = 0; i < exponent; i++) {
-            factor *= base;
-        }
+        BigDecimal p = BigDecimal.valueOf(principal);               // p          = principal
+        BigDecimal result = base.pow(exponent);                     // result     = (1 + r/n)^(nt)
+        BigDecimal calculated = p.multiply(result);                 // calculated = p * result
 
-        double calculated = principal * factor;
-
-        return Math.round(calculated * 100.0) / 100.0;
+        return calculated.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }
