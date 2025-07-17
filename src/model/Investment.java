@@ -2,21 +2,24 @@ package model;
 
 public class Investment {
     
-    private int deposit_id;
-    private double maturity_amount;
-    private double total_interest;
-    private double estimated_tax;
+    private int depositId;
+    private String maturityDate;
+    private double maturityAmount;
+    private double totalInterest;
+    private double estimatedTax;
 
-    public Investment(int deposit_id, double maturity_amount, double total_interest, int estimated_tax){
+    public Investment(int deposit_id, String maturity_date, double maturity_amount, double total_interest, double estimated_tax){
 
-        this.deposit_id = deposit_id;
-        this.maturity_amount = maturity_amount;
-        this.total_interest = total_interest;
-        this.estimated_tax = estimated_tax;
+        this.depositId = deposit_id;
+        this.maturityDate = maturity_date;
+        this.maturityAmount = maturity_amount;
+        this.totalInterest = total_interest;
+        this.estimatedTax = estimated_tax;
     }
 
-    public int getDepositId(){ return deposit_id; }
-    public double getMaturityAmount(){ return maturity_amount;}
-    public double getTotalInterest(){ return total_interest;}
-    public double getEstimateTax(){ return estimated_tax;}
+    public int getDepositId(){ return depositId; }
+    public String getMaturityDate(){ return maturityDate;}
+    public double getMaturityAmount(){ return maturityAmount;}
+    public double getTotalInterest(){ return totalInterest;}
+    public double getEstimateTax(){ return estimatedTax;}
 }

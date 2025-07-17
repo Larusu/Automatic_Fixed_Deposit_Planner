@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import model.Investment;
 
 public class InvestmentDAO extends CrudDAO<Investment>{
-
-    @Override
+    
+     @Override
     protected String getTableName() {
         return "investments";
     }
 
     @Override
     protected String getColumnName() {
-        return "deposit_id, maturity_amount, total_interest, estimated_tax";
+        return "deposit_id, maturity_date, maturity_amount, total_interest, estimated_tax";
     }
 
     @Override
@@ -21,6 +21,7 @@ public class InvestmentDAO extends CrudDAO<Investment>{
 
        ArrayList<Object> fields = new ArrayList<>();
         fields.add(i.getDepositId());
+        fields.add(i.getMaturityDate());
         fields.add(i.getMaturityAmount());
         fields.add(i.getTotalInterest());
         fields.add(i.getEstimateTax());
