@@ -7,24 +7,16 @@ import java.sql.Statement;
 
 public class DatabaseInitializer {
 
-    static final String DB_URL = "jdbc:mysql://localhost:3306/planner_db"; // xampp
-    static final String Username = "root";
-    static final String Password = "";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/planner_db"; // xampp
+    private static final String Username = "root";
+    private static final String Password = "";
 
-    public static Connection connect()
+    static Connection connect() throws SQLException
     {
-        try 
-        {
-            Connection conn = DriverManager.getConnection(DB_URL, Username, Password);
-            return conn;
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-            return null;
-        }
+        Connection conn = DriverManager.getConnection(DB_URL, Username, Password);
+        return conn;
     }
-    
+
     public static void initializeDatabase()
     {
         try(Connection conn = connect(); 
@@ -50,7 +42,6 @@ public class DatabaseInitializer {
                             "    user_id INT NOT NULL," + 
                             "    goal_id INT," + 
                             "    principal_amount DECIMAL(10, 2) NOT NULL," + 
-                            "    interest_rate DECIMAL(10, 2) NOT NULL," + 
                             "    duration_value INT NOT NULL," + 
                             "    duration_unit TEXT NOT NULL," + 
                             "    compounding_frequency TEXT NOT NULL," + 
@@ -59,15 +50,15 @@ public class DatabaseInitializer {
                             "    FOREIGN KEY (goal_id) REFERENCES Goal(id)" + 
                             "    );";
 
-                String investments = "CREATE TABLE IF NOT EXISTS Investments (" +
-                                    "    id INT PRIMARY KEY AUTO_INCREMENT," +
-                                    "    deposit_id INT NOT NULL," +
-                                    "    maturity_date TEXT NOT NULL," +
-                                    "    maturity_amount DECIMAL(10, 2) NOT NULL," +
-                                    "    total_interest DECIMAL(10, 2) NOT NULL," +
-                                    "    estimated_tax DECIMAL(10, 2) NOT NULL," +
-                                    "    FOREIGN KEY (deposit_id) REFERENCES Deposit_Plan(id)" +
-                                    ");";
+            String investments = "CREATE TABLE IF NOT EXISTS Investments (" +
+                                "    id INT PRIMARY KEY AUTO_INCREMENT," +
+                                "    deposit_id INT NOT NULL," +
+                                "    maturity_date TEXT NOT NULL," +
+                                "    maturity_amount DECIMAL(10, 2) NOT NULL," +
+                                "    total_interest DECIMAL(10, 2) NOT NULL," +
+                                "    estimated_tax DECIMAL(10, 2) NOT NULL," +
+                                "    FOREIGN KEY (deposit_id) REFERENCES Deposit_Plan(id)" +
+                                ");";
 
             stmt.executeUpdate(users);
             stmt.executeUpdate(goal);
@@ -78,5 +69,38 @@ public class DatabaseInitializer {
         {
             e.printStackTrace();
         }
+    }
+
+    static void ResetDB(String columnName)
+    {
+        String sql = "DROP TABLE IF EXISTS ";
+        switch (columnName.toLowerCase()) 
+        {
+            case "investments":
+                sql += "investments;";
+                break;
+            case "goal":
+                sql += "goal;";
+                break;
+            case "depositplan":
+                sql += "investments, goal, deposit_plan;";
+                break;
+            case "user":
+                sql += "investments, goal, deposit_plan, user;";
+                break;
+            default:
+                return;
+        }
+        
+        try(Connection conn = connect();
+        Statement stmt = conn.createStatement())
+        {
+            stmt.execute(sql);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        initializeDatabase();
     }
 }

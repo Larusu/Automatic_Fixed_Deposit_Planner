@@ -1,7 +1,14 @@
 package dbcode;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.xml.crypto.Data;
+
+import logic.InterestCalculator;
 import model.Investment;
 
 public class InvestmentDAO extends CrudDAO<Investment>{
@@ -27,5 +34,24 @@ public class InvestmentDAO extends CrudDAO<Investment>{
         fields.add(i.getEstimateTax());
 
         return fields;
+    }
+
+    public static void calculateSQL(int id)
+    {
+        
+        try(Connection conn = DatabaseInitializer.connect();)
+        {
+            String sqlGetID = "SELECT id FROM deposit_plan ORDER BY id DESC LIMIT 1";
+            PreparedStatement pstmt = conn.prepareStatement(sqlGetID);
+            ResultSet rsGetID = pstmt.executeQuery();
+
+            int depositPlanId = rsGetID.getInt("id");
+        }
+        catch(SQLException e)
+        {
+            
+        }
+
+        InvestmentDAO.calculateSQL(id);
     }
 }

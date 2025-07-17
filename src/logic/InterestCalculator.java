@@ -12,97 +12,93 @@ public class InterestCalculator{
 
     public enum Frequency 
     {
-        ANNUALLY("Annually"),
-        SEMIANNUALLY("Semiannually"),
-        QUARTERLY("Quarterly"),
-        MONTHLY("Monthly"),
-        BIWEEKLY("Biweekly"),
-        WEEKLY("Weekly"),
-        DAILY("Daily");
+        ANNUALLY("Annually", 1),
+        SEMIANNUALLY("Semiannually", 2),
+        QUARTERLY("Quarterly", 6),
+        MONTHLY("Monthly", 12),
+        BIWEEKLY("Biweekly", 26),
+        WEEKLY("Weekly", 52),
+        DAILY("Daily", 365);
 
         private final String label;
+        private final int frequency;
 
-        Frequency(String label) { this.label = label; }
+        Frequency(String label, int frequency) 
+        { 
+            this.label = label; 
+            this.frequency = frequency;
+        }
+
+        public int getFrequency() { return frequency; }
 
         @Override
         public String toString() { return label; }
     }
 
-    public static void main(String[] args) {
+    public enum DurationUnit
+    {
+        MONTHS("Months", 12),
+        YEARS("Years", 1);
 
-        InterestCalculator calc = new InterestCalculator();
-        int principal = 1000;
-        double rate = 1;
-        int time = 5;
-        Frequency duration = Frequency.ANNUALLY;
-        System.out.println("Principal: " + principal);
-        System.out.println("Rate: " + rate + "%");
-        System.out.println("Time: " + time + " years");
-        System.out.println("Duration: " + duration);
-        System.out.println("Tax: " + calc.taxRate + "%");
-        System.out.println("Total Interest paid: " + calc.totalTaxPaid(principal, rate, duration, time));
-        System.out.println("Maturity With Tax: " + calc.compoundInterestWithTax(principal, rate, duration, time));
-        System.out.println("Maturity: " + calc.compoundInterest(principal, rate, duration, time));
+        private final String label;
+        private final int divisor;
+
+        DurationUnit(String label, int divisor) 
+        { 
+            this.label = label; 
+            this.divisor = divisor; 
+        }
+
+        public double toYears(int value)
+        {
+            double getYear = (double)value;
+            if(this == MONTHS){ getYear /= (double) divisor; }
+            return BigDecimal.valueOf(getYear).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        }
+        
+        @Override
+        public String toString() { return label; }
     }
 
-    public double compoundInterest(int principal, double rate, Frequency duration, int time)
+    public double compoundInterest(int principal, double rate, Frequency duration, double time)
     {
-        int freq = strFrequency(duration);
+        int freq = duration.getFrequency();
         if(freq == 0) return 0;
         
         // P * (1 + r/n)^(nt)
         double r = rate / 100;          // rate% = ra.te
         double base = 1 + (r / freq);   // 1 + r / n
-        int exponent = freq * time;     // ^(nt)
+        double exponent = freq * time;     // ^(nt)
 
-        double result = Math.pow(base, exponent); // (1 + r /n)^(nt)
-        double calculate = principal * result;    // principal * result
-
-        BigDecimal c = BigDecimal.valueOf(calculate);
+        double compounded = Math.pow(base, exponent); // (1 + r /n)^(nt)
+        double totalAmount = principal * compounded;    // principal * result
         
-        return c.setScale(2, RoundingMode.HALF_UP).doubleValue(); // get 2 decimal places that is rounded
+        // round to 2 decimal places
+        return BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue(); 
     }
 
-    public double compoundInterestWithTax(int principal, double rate, Frequency duration, int time)
+    public double compoundInterestWithTax(int principal, double rate, Frequency duration, double time)
     {
-        int freq = strFrequency(duration);
+        int freq = duration.getFrequency();
         if(freq == 0) return 0;
 
         // P *[1 + (r * (1 - taxrate)/n)]^(nt)
         double tax = calculatedTax(rate);    // r * (1 - taxrate) 
         double base = 1 + (tax / freq);      // 1 + [r * (1 - taxrate)/ n)]
-        int exponent = freq * time;          // ^(nt)
+        double exponent = freq * time;          // ^(nt)
 
-        double result = Math.pow(base, exponent); // 1 + (r * t / n) ^ (nt)
-        double calculate = principal * result;    // p + result
-
-        BigDecimal c = BigDecimal.valueOf(calculate);
+        double compounded = Math.pow(base, exponent); // 1 + (r * t / n) ^ (nt)
+        double totalAmount = principal * compounded;    // p + result
         
-        return c.setScale(2, RoundingMode.HALF_UP).doubleValue(); // get 2 decimal places that is rounded
+        // round to 2 decimal places
+        return BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue(); 
     } 
 
-    public double totalTaxPaid(int principal, double rate, Frequency duration, int time)
+    public double totalTaxPaid(int principal, double rate, Frequency duration, double time)
     {
         double d = compoundInterest(principal, rate, duration, time) - compoundInterestWithTax(principal, rate, duration, time);
 
-        BigDecimal taxPaid = BigDecimal.valueOf(d);
-
-        return taxPaid.setScale(2, RoundingMode.HALF_UP).doubleValue();
-    }
-
-    private int strFrequency(Frequency frequency)
-    {
-        switch (frequency) 
-        {
-            case ANNUALLY: return 1;
-            case SEMIANNUALLY: return 2;
-            case QUARTERLY: return 4;
-            case MONTHLY: return 12;
-            case BIWEEKLY: return 26;
-            case WEEKLY: return 52;
-            case DAILY: return 365;
-            default: return 0;
-        }
+        return BigDecimal.valueOf(d).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     private double calculatedTax(double rate)

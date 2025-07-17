@@ -91,18 +91,6 @@ public abstract class CrudDAO<T> {
         }
     }
 
-    public void reset() {
-        // Reseting the entire deposit table by deleting the table and creating it again
-        String sqlReset = "DROP TABLE " + getTableName();
-        try (Connection conn = DatabaseInitializer.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sqlReset)) {
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        DatabaseInitializer.initializeDatabase();
-    }
-
     private boolean validateColumnName(String columnName) {
         // Validation for developers to check their syntax
         String allowedColumns[] = getColumnName().split(",");
@@ -136,7 +124,7 @@ public abstract class CrudDAO<T> {
         return placeholder.substring(0, placeholder.length() - 1);
     }
 
-    private String getPlaceholder(ArrayList<String> arrayList) {
+    protected String getPlaceholder(ArrayList<String> arrayList) {
 
         String placeholder = "";
         for (int i = 0; i < arrayList.size(); i++) {
