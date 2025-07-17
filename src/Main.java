@@ -1,15 +1,11 @@
-import javax.swing.SwingUtilities;
 
 import dbcode.DatabaseInitializer;
-import gui.MenuFrame;
 
 public class Main {
     
     public static void main(String[] args) {
         
         DatabaseInitializer.initializeDatabase();
-        
-        SwingUtilities.invokeLater(MenuFrame::new);
     }
 }
 // import java.util.Properties;

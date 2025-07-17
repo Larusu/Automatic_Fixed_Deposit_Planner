@@ -7,60 +7,75 @@ import java.sql.Statement;
 
 public class DatabaseInitializer {
 
-    static final String DB_URL = "jdbc:sqlite:db/database.db";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/planner_db"; // xampp
+    static final String Username = "root";
+    static final String Password = "";
 
-    public static Connection connect(){
-
-        try {
-            Connection conn = DriverManager.getConnection(DB_URL);
-            Statement stmt = conn.createStatement();
-            stmt.execute("PRAGMA foreign_keys = ON"); // to enable foreign key
+    public static Connection connect()
+    {
+        try 
+        {
+            Connection conn = DriverManager.getConnection(DB_URL, Username, Password);
             return conn;
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) 
+        {
             e.printStackTrace();
             return null;
         }
     }
     
-    public static void initializeDatabase(){
-
+    public static void initializeDatabase()
+    {
         try(Connection conn = connect(); 
             Statement stmt = conn.createStatement();)
         { 
-            String deposits = "CREATE TABLE IF NOT EXISTS deposits(" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "name TEXT NOT NULL," +
-            "principal_amount REAL NOT NULL," +
-            "interest_rate REAL NOT NULL," +
-            "duration_value INTEGER NOT NULL," +
-            "duration_unit TEXT NOT NULL," +
-            "compounding_frequency TEXT NOT NULL," +
-            "start_date TEXT NOT NULL," +
-            "is_tax_applied INTEGER NOT NULL);";
-
-            String investments = "CREATE TABLE IF NOT EXISTS investments(" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "deposit_id INTEGER NOT NULL, " +
-            "maturity_amount REAL NOT NULL, " +
-            "total_interest REAL NOT NULL, " +
-            "estimated_tax REAL NOT NULL, " +
-            "FOREIGN KEY (deposit_id) REFERENCES deposits(id) ON DELETE CASCADE);";
-
-            String maturity_schedule = "CREATE TABLE IF NOT EXISTS maturity_schedule(" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "investment_id INTEGER NOT NULL, " +
-            "period_number INTEGER NOT NULL, " +
-            "date TEXT NOT NULL, " +
-            "interest_earned REAL NOT NULL, " +
-            "tax_deducted REAL NOT NULL, " +
-            "total_balance REAL NOT NULL, " +
-            "FOREIGN KEY (investment_id) REFERENCES investments(id) ON DELETE CASCADE);";
-
-            stmt.executeUpdate(deposits);
-            stmt.executeUpdate(investments);
-            stmt.executeUpdate(maturity_schedule);
+            String users = "CREATE TABLE IF NOT EXISTS User (" +  
+                        "    id INT PRIMARY KEY AUTO_INCREMENT," + 
+                        "    username VARCHAR(99) NOT NULL," + 
+                        "    email VARCHAR(99) NOT NULL UNIQUE," + 
+                        "    password VARCHAR(99) NOT NULL" + 
+                        "    );";
             
-        }catch(SQLException e){
+            String goal = "CREATE TABLE IF NOT EXISTS Goal (" + 
+                        "    id INT PRIMARY KEY AUTO_INCREMENT," + 
+                        "    name VARCHAR(255) NOT NULL," + 
+                        "    timeframe_value INT NOT NULL," + 
+                        "    timeframe_unit TEXT NOT NULL," + 
+                        "    price DECIMAL(10, 2) NOT NULL" + 
+                        "    );";
+
+            String deposit = "CREATE TABLE IF NOT EXISTS Deposit_Plan (" + 
+                            "    id INT PRIMARY KEY AUTO_INCREMENT," + 
+                            "    user_id INT NOT NULL," + 
+                            "    goal_id INT," + 
+                            "    principal_amount DECIMAL(10, 2) NOT NULL," + 
+                            "    interest_rate DECIMAL(10, 2) NOT NULL," + 
+                            "    duration_value INT NOT NULL," + 
+                            "    duration_unit TEXT NOT NULL," + 
+                            "    compounding_frequency TEXT NOT NULL," + 
+                            "    start_date TEXT NOT NULL," + 
+                            "    FOREIGN KEY (user_id) REFERENCES User(id)," + 
+                            "    FOREIGN KEY (goal_id) REFERENCES Goal(id)" + 
+                            "    );";
+
+                String investments = "CREATE TABLE IF NOT EXISTS Investments (" +
+                                    "    id INT PRIMARY KEY AUTO_INCREMENT," +
+                                    "    deposit_id INT NOT NULL," +
+                                    "    maturity_date TEXT NOT NULL," +
+                                    "    maturity_amount DECIMAL(10, 2) NOT NULL," +
+                                    "    total_interest DECIMAL(10, 2) NOT NULL," +
+                                    "    estimated_tax DECIMAL(10, 2) NOT NULL," +
+                                    "    FOREIGN KEY (deposit_id) REFERENCES Deposit_Plan(id)" +
+                                    ");";
+
+            stmt.executeUpdate(users);
+            stmt.executeUpdate(goal);
+            stmt.executeUpdate(deposit);
+            stmt.executeUpdate(investments);
+            
+        }catch(SQLException e)
+        {
             e.printStackTrace();
         }
     }
