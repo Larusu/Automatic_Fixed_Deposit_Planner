@@ -1,7 +1,5 @@
 package model;
 
-import javax.swing.JOptionPane;
-
 import logic.TimeReference.DurationUnit;
 import logic.TimeReference.Frequency;
 import session.Session;
