@@ -23,7 +23,7 @@ public class DatabaseInitializer {
             Statement stmt = conn.createStatement();)
         { 
             String users = """
-                CREATE TABLE IF NOT EXISTS User ( 
+                CREATE TABLE IF NOT EXISTS user ( 
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 username VARCHAR(99) NOT NULL,
                 email VARCHAR(99) NOT NULL UNIQUE,
@@ -32,7 +32,7 @@ public class DatabaseInitializer {
             """;
             
             String goal = """
-                CREATE TABLE IF NOT EXISTS Goal (
+                CREATE TABLE IF NOT EXISTS goal (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 name VARCHAR(255) NOT NULL,
                 timeframe_value INT NOT NULL,
@@ -42,7 +42,7 @@ public class DatabaseInitializer {
             """;
 
             String deposit = """ 
-                CREATE TABLE IF NOT EXISTS Deposit_Plan (
+                CREATE TABLE IF NOT EXISTS deposit_plan (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 user_id INT NOT NULL,
                 goal_id INT,
@@ -52,20 +52,20 @@ public class DatabaseInitializer {
                 duration_unit TEXT NOT NULL,
                 compounding_frequency TEXT NOT NULL,
                 start_date TEXT NOT NULL,
-                FOREIGN KEY (user_id) REFERENCES User(id) 
-                FOREIGN KEY (goal_id) REFERENCES Goal(id)
+                FOREIGN KEY (user_id) REFERENCES user(id),
+                FOREIGN KEY (goal_id) REFERENCES goal(id)
                 );      
             """;
 
             String investments ="""
-                CREATE TABLE IF NOT EXISTS Investments (
+                CREATE TABLE IF NOT EXISTS investments (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 deposit_id INT NOT NULL,
                 maturity_date TEXT NOT NULL,
                 maturity_amount DECIMAL(10, 2) NOT NULL,
                 total_interest DECIMAL(10, 2) NOT NULL,
                 estimated_tax DECIMAL(10, 2) NOT NULL,
-                FOREIGN KEY (deposit_id) REFERENCES Deposit_Plan(id)
+                FOREIGN KEY (deposit_id) REFERENCES deposit_Plan(id)
                 );
             """;
 
