@@ -95,13 +95,13 @@ public class DatabaseInitializer {
                 sql += "investments;";
                 break;
             case "goal":
-                sql += "goal;";
+                sql += "investments, deposit_plan, goal;";
                 break;
             case "depositplan":
-                sql += "goal, investments, deposit_plan;";
+                sql += "investments, deposit_plan;";
                 break;
             case "user":
-                sql += "goal, investments, deposit_plan, user;";
+                sql += "investments, deposit_plan, goal, user;";
                 break;
             default:
                 return;
