@@ -1,7 +1,13 @@
 package dbcode;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
+import logic.TimeReference.Frequency;
 import model.DepositPlan;
 
 public class DepositPlanDAO extends CrudDAO<DepositPlan> {
@@ -34,4 +40,24 @@ public class DepositPlanDAO extends CrudDAO<DepositPlan> {
         return fields;
     }
 
+    @Override
+    public void insert(DepositPlan depositPlan) {
+
+        int durationInMonths = (depositPlan.getDurationUnit().equalsIgnoreCase("months"))  
+                        ? depositPlan.getDurationValue()
+                        : depositPlan.getDurationValue() * 12;
+
+        Frequency freq = Frequency.find(depositPlan.getCompoundingFrequency());
+
+        if ((12 / freq.getFrequency()) > durationInMonths) {
+            JOptionPane.showMessageDialog(null,
+                "The compounding frequency is longer than the deposit plan duration.",
+                "Invalid Compounding Frequency",
+                JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        super.insert(depositPlan);
+    }
 }
