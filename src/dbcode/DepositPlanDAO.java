@@ -1,8 +1,5 @@
 package dbcode;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
