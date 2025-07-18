@@ -5,9 +5,11 @@ import java.math.RoundingMode;
 
 public class InterestCalculator{
 
-    // For resident and non-resident aliens engaged in trade or business in the Philippines, 
-    // the maximum rate on income subject to final tax (usually passive investment income) is 20%.
-    // "https://taxsummaries.pwc.com/philippines/individual/taxes-on-personal-income#:~:text=For%20resident%20and%20non%2Dresident,rate%20is%20a%20flat%2025%25."
+    /**
+    * For resident and non-resident aliens engaged in trade or business in the Philippines, 
+    * the maximum rate on income subject to final tax (usually passive investment income) is 20%.
+    * "https://taxsummaries.pwc.com/philippines/individual/taxes-on-personal-income#:~:text=For%20resident%20and%20non%2Dresident,rate%20is%20a%20flat%2025%25."
+    */
     private final int taxRate = 20; 
 
     public enum Frequency 
@@ -31,6 +33,7 @@ public class InterestCalculator{
 
         public int getFrequency() { return frequency; }
 
+         // Finds the matching enum from a string input (case-insensitive)
         public static Frequency find(String value)
         {
             try { return Frequency.valueOf(value.toUpperCase()); } 
@@ -55,13 +58,15 @@ public class InterestCalculator{
             this.divisor = divisor; 
         }
 
+         // Converts a duration value (e.g., 6 months) to years
         public double toYears(int value)
         {
             double getYear = (double)value;
-            if(this == MONTHS){ getYear /= (double) divisor; }
+            if(this == MONTHS){ getYear /= (double) divisor; } // If unit is in months, Divide by 12 to convert to years
             return BigDecimal.valueOf(getYear).setScale(2, RoundingMode.HALF_UP).doubleValue();
         }
 
+        // Finds matching enum from a string input (case-insensitive)
         public static DurationUnit find(String value) 
         {
             try { return DurationUnit.valueOf(value.toUpperCase()); } 
@@ -72,20 +77,19 @@ public class InterestCalculator{
         public String toString() { return label; }
     }
 
+
     public double maturityAmount(int principal, double rate, Frequency duration, double time)
     {
-        int freq = duration.getFrequency();
-        if(freq == 0) return 0;
-        
-        // P * (1 + r/n)^(nt)
-        double r = rate / 100;          // rate% = ra.te
-        double base = 1 + (r / freq);   // 1 + r / n
-        double exponent = freq * time;     // ^(nt)
+        int freq = duration.getFrequency();            
+        if(freq == 0) return 0;                        
 
-        double compounded = Math.pow(base, exponent); // (1 + r /n)^(nt)
-        double totalAmount = principal * compounded;    // principal * result
-        
-        // round to 2 decimal places
+        double r = rate / 100.0;                       // Convert annual interest rate from % to decimal (e.g., 5% becomes 0.05)
+        double base = 1 + (r / freq);                  // Calculate base of the compound formula: (1 + r/n)
+        double exponent = freq * time;                 // Calculate exponent of the formula: (nt)
+
+        double compounded = Math.pow(base, exponent);  // Raise base to exponent: (1 + r/n)^(nt)
+        double totalAmount = principal * compounded;   // Multiply by principal: P * (1 + r/n)^(nt)  
+
         return BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue(); 
     }
 
@@ -94,27 +98,25 @@ public class InterestCalculator{
         int freq = duration.getFrequency();
         if(freq == 0) return 0;
 
-        // P *[1 + (r * (1 - taxrate)/n)]^(nt)
-        double grossMaturity = maturityAmount(principal, rate, duration, time);    // P * (1 + r/n)^(nt)
-        double interest = grossMaturity - principal;      // interest = [P * (1 + r/n)^(nt)] - P
-        double tax = interest * (taxRate / 100.0);          // tax = i * (tax / 100)
-        double totalAmount = grossMaturity - tax;    // p + result
+        double grossMaturity = maturityAmount(principal, rate, duration, time); // Get gross maturity 
+        double interest = grossMaturity - principal;         // Calculate earned interest: Gross - Principal
+        double tax = interest * (taxRate / 100.0);           // Compute tax based on interest earned
+        double totalAmount = grossMaturity - tax;            // Final amount after deducting tax
         
-        // round to 2 decimal places
         return BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue(); 
     } 
 
+    // Calculates the total tax paid based on the difference between gross and net maturity amounts
     public double totalTaxPaid(int principal, double rate, Frequency duration, double time)
     {
         double d = maturityAmount(principal, rate, duration, time) - maturityAmountWithTax(principal, rate, duration, time);
-
         return BigDecimal.valueOf(d).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
+    // Calculates the total interest earned before tax, based on the maturity amount minus the principal.
     public double totalInterest(int principal, double rate, Frequency duration, double time)
     {
         double i = maturityAmount(principal, rate, duration, time) - principal;
-
         return BigDecimal.valueOf(i).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }
