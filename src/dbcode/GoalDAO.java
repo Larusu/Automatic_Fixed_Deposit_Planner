@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
 import model.Goal;
 
 public class GoalDAO extends CrudDAO<Goal>{
