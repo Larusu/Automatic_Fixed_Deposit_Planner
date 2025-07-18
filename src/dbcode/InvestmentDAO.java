@@ -13,6 +13,7 @@ import logic.InterestCalculator;
 import logic.TimeReference.DurationUnit;
 import logic.TimeReference.Frequency;
 import model.Investment;
+import session.Session;
 
 public class InvestmentDAO extends CrudDAO<Investment>{
     
@@ -44,9 +45,18 @@ public class InvestmentDAO extends CrudDAO<Investment>{
     public void calculateSQL()
     {
         // Declare variables for storing values that will be retrieve in databae
-        int userId = 0, principal = 0, durationValue = 0;
+        int userId = Session.userId; 
+        int principal = 0, durationValue = 0;
         double interest = 0;
         String durationUnit = "", frequency= "", startDateStr = "";
+
+        if (Session.userId == -1) {
+            JOptionPane.showMessageDialog(null,
+            "Please log in first to continue.",
+            "Authentication Required",
+            JOptionPane.WARNING_MESSAGE);
+            return; // or redirect to login screen
+        }
 
         try(Connection conn = DatabaseInitializer.connect();)
         {

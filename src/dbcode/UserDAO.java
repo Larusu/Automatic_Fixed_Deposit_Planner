@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import model.User;
+import session.Session;
 
 public class UserDAO extends CrudDAO<User> {
 
@@ -70,7 +71,7 @@ public class UserDAO extends CrudDAO<User> {
     {
         String email = element.getEmail();
         String password = element.getPassword();
-        String sql = "SELECT password FROM user WHERE email = ?";
+        String sql = "SELECT password, id FROM user WHERE email = ?";
 
         try(Connection conn = DatabaseInitializer.connect();
         PreparedStatement stmt = conn.prepareStatement(sql);)
@@ -99,6 +100,11 @@ public class UserDAO extends CrudDAO<User> {
                 JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
+            // for changing session's user
+            int id = rs.getInt("id");
+            Session.userId = id;
+
             System.out.println("Login successfully!");
         }
         catch(SQLException e)
