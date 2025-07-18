@@ -31,6 +31,12 @@ public class InterestCalculator{
 
         public int getFrequency() { return frequency; }
 
+        public static Frequency find(String value)
+        {
+            try { return Frequency.valueOf(value.toUpperCase()); } 
+            catch (IllegalArgumentException e) { return null; }
+        }
+
         @Override
         public String toString() { return label; }
     }
@@ -55,12 +61,18 @@ public class InterestCalculator{
             if(this == MONTHS){ getYear /= (double) divisor; }
             return BigDecimal.valueOf(getYear).setScale(2, RoundingMode.HALF_UP).doubleValue();
         }
+
+        public static DurationUnit find(String value) 
+        {
+            try { return DurationUnit.valueOf(value.toUpperCase()); } 
+            catch (IllegalArgumentException e) { return null; }
+        }
         
         @Override
         public String toString() { return label; }
     }
 
-    public double compoundInterest(int principal, double rate, Frequency duration, double time)
+    public double maturityAmount(int principal, double rate, Frequency duration, double time)
     {
         int freq = duration.getFrequency();
         if(freq == 0) return 0;
@@ -77,18 +89,16 @@ public class InterestCalculator{
         return BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue(); 
     }
 
-    public double compoundInterestWithTax(int principal, double rate, Frequency duration, double time)
+    public double maturityAmountWithTax(int principal, double rate, Frequency duration, double time)
     {
         int freq = duration.getFrequency();
         if(freq == 0) return 0;
 
         // P *[1 + (r * (1 - taxrate)/n)]^(nt)
-        double tax = calculatedTax(rate);    // r * (1 - taxrate) 
-        double base = 1 + (tax / freq);      // 1 + [r * (1 - taxrate)/ n)]
-        double exponent = freq * time;          // ^(nt)
-
-        double compounded = Math.pow(base, exponent); // 1 + (r * t / n) ^ (nt)
-        double totalAmount = principal * compounded;    // p + result
+        double grossMaturity = maturityAmount(principal, rate, duration, time);    // P * (1 + r/n)^(nt)
+        double interest = grossMaturity - principal;      // interest = [P * (1 + r/n)^(nt)] - P
+        double tax = interest * (taxRate / 100.0);          // tax = i * (tax / 100)
+        double totalAmount = grossMaturity - tax;    // p + result
         
         // round to 2 decimal places
         return BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue(); 
@@ -96,17 +106,15 @@ public class InterestCalculator{
 
     public double totalTaxPaid(int principal, double rate, Frequency duration, double time)
     {
-        double d = compoundInterest(principal, rate, duration, time) - compoundInterestWithTax(principal, rate, duration, time);
+        double d = maturityAmount(principal, rate, duration, time) - maturityAmountWithTax(principal, rate, duration, time);
 
         return BigDecimal.valueOf(d).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
-    private double calculatedTax(double rate)
-    { 
-        BigDecimal t = BigDecimal.valueOf(taxRate).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-        BigDecimal r = BigDecimal.valueOf(rate).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-        BigDecimal tax = r.multiply(BigDecimal.ONE.subtract(t)); // r * (1 - taxrate)
+    public double totalInterest(int principal, double rate, Frequency duration, double time)
+    {
+        double i = maturityAmount(principal, rate, duration, time) - principal;
 
-        return tax.doubleValue(); 
+        return BigDecimal.valueOf(i).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }

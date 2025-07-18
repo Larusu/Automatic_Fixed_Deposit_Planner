@@ -1,19 +1,21 @@
 package dbcode;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.LocalDate;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import javax.xml.crypto.Data;
-
 import logic.InterestCalculator;
+import logic.InterestCalculator.DurationUnit;
+import logic.InterestCalculator.Frequency;
 import model.Investment;
 
 public class InvestmentDAO extends CrudDAO<Investment>{
     
-     @Override
+    InterestCalculator calc = new InterestCalculator();
+
+    @Override
     protected String getTableName() {
         return "investments";
     }
@@ -36,22 +38,65 @@ public class InvestmentDAO extends CrudDAO<Investment>{
         return fields;
     }
 
-    public static void calculateSQL(int id)
+    public void calculateSQL()
     {
-        
+        // Declare variables for storing values that will be retrieve in databae
+        int userId = 0, principal = 0, durationValue = 0;
+        String durationUnit = "", frequency= "", startDateStr = "";
+
         try(Connection conn = DatabaseInitializer.connect();)
         {
-            String sqlGetID = "SELECT id FROM deposit_plan ORDER BY id DESC LIMIT 1";
-            PreparedStatement pstmt = conn.prepareStatement(sqlGetID);
-            ResultSet rsGetID = pstmt.executeQuery();
+            String sqlGetLatestPlan = """
+                SELECT id, principal_amount, duration_value, duration_unit, 
+                        compounding_frequency, start_date
+                FROM deposit_plan 
+                ORDER BY id DESC 
+                LIMIT 1
+            """;
 
-            int depositPlanId = rsGetID.getInt("id");
+            Statement stmt = conn.createStatement();
+            ResultSet rsGetID = stmt.executeQuery(sqlGetLatestPlan);
+
+            // Get values
+            if (rsGetID.next()) 
+            {
+                userId = rsGetID.getInt("id");
+                principal = rsGetID.getInt("principal_amount");
+                durationValue = rsGetID.getInt("duration_value");
+                durationUnit = rsGetID.getString("duration_unit");
+                frequency = rsGetID.getString("compounding_frequency");
+                startDateStr = rsGetID.getString("start_date");
+            }
+
+            // String -> enums
+            Frequency freqEnum = Frequency.find(frequency);
+            DurationUnit durationEnum = DurationUnit.find(durationUnit);
+            if(freqEnum == null || durationEnum == null)
+            {
+                System.err.println("Invalid frequency or duration unit in database.");
+                return;
+            }
+            double durationInYears = durationEnum.toYears(durationValue); // Convert duration value to years
+            
+            // Calculate maturity date
+            LocalDate startDate = LocalDate.parse(startDateStr);
+            LocalDate endDate = (durationEnum == DurationUnit.MONTHS) 
+                                ? startDate.plusMonths(durationValue) 
+                                : startDate.plusYears(durationValue);
+            String maturityDate = endDate.toString();
+
+            // For financial values
+            double maturityAmount = calc.maturityAmountWithTax(principal, 10, freqEnum, durationInYears);
+            double totalInterest = calc.totalTaxPaid(principal, 10, freqEnum, durationInYears);
+            double taxOnInterest = calc.totalInterest(principal, 10, freqEnum, durationInYears);
+
+            Investment investment = new Investment(userId, maturityDate, maturityAmount, totalInterest, taxOnInterest);
+            InvestmentDAO investmentDAO = new InvestmentDAO();
+            investmentDAO.insert(investment);
         }
         catch(SQLException e)
         {
-            
+            e.printStackTrace();
         }
-
-        InvestmentDAO.calculateSQL(id);
     }
 }
