@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public abstract class CrudDAO<T> {
 
     protected abstract String getTableName();
@@ -30,6 +32,10 @@ public abstract class CrudDAO<T> {
             }
             pstmt.executeUpdate();
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+            "Something went wrong while saving your data.\nPlease check your input and try again.", 
+            "Save Failed",
+            JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -50,6 +56,10 @@ public abstract class CrudDAO<T> {
                 return field.getString(column);
             }
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+            "We couldn't retrieve the information.\nPlease try again later.", 
+            "Data Retrieval Error", 
+            JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
         return null;
@@ -72,6 +82,10 @@ public abstract class CrudDAO<T> {
 
             System.out.println("Updated row with id " + id);
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+            "We couldn't update your changes.\nPlease make sure everything is valid and try again.", 
+            "Update Failed", 
+            JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -87,6 +101,10 @@ public abstract class CrudDAO<T> {
 
             System.out.println("Deleted row from " + getTableName() + " where id = " + id);
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+            "We couldn't delete the item.\nPlease try again later.", 
+            "Delete Failed", 
+            JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }

@@ -6,6 +6,9 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import logic.InterestCalculator;
 import logic.TimeReference.DurationUnit;
 import logic.TimeReference.Frequency;
@@ -93,11 +96,15 @@ public class InvestmentDAO extends CrudDAO<Investment>{
             double taxOnInterest = calc.totalInterest(principal, interest, freqEnum, durationInYears);
 
             Investment investment = new Investment(userId, maturityDate, maturityAmount, totalInterest, taxOnInterest);
-            InvestmentDAO investmentDAO = new InvestmentDAO();
-            investmentDAO.insert(investment);
+            this.insert(investment);
         }
         catch(SQLException e)
         {
+            System.err.println("Error during calculation: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, 
+            "We couldn't complete the calculation.\nPlease check your inputs and try again.", 
+            "Calculation Error", 
+            JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }

@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.JOptionPane;
+
 public class DatabaseInitializer {
 
     private static final String DB_URL = "jdbc:mysql://localhost:3306/planner_db"; // xampp
@@ -77,6 +79,10 @@ public class DatabaseInitializer {
         }catch(SQLException e)
         {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, 
+            "The application failed to start properly.\nPlease restart the application.", 
+            "Startup Error", 
+            JOptionPane.ERROR_MESSAGE);
         }
     }
 
