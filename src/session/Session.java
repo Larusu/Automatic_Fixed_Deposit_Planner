@@ -4,14 +4,15 @@ import dbcode.UserDAO;
 import model.User;
 
 public class Session {
-    
+
+    // Maintains and manages the session state of the currently logged-in user across the application.
     public static int userId = -1;
 
-    public static void login(String username, String email, String password) 
+    public static void login(String email, String password) 
     {
-        User user = new User(username, email, password);
+        User user = new User(email, password);
         UserDAO userDAO = new UserDAO();
-        userDAO.register(user);
+        userDAO.login(user);
     }
 
     public static void logout()

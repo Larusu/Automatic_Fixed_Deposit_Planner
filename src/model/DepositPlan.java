@@ -1,7 +1,10 @@
 package model;
 
+import javax.swing.JOptionPane;
+
 import logic.TimeReference.DurationUnit;
 import logic.TimeReference.Frequency;
+import session.Session;
 
 public class DepositPlan 
 {
@@ -14,10 +17,10 @@ public class DepositPlan
     private Frequency compoundingFrequency;
     private String startDate = "";
 
-    public DepositPlan(int user_id, int goal_id, double principal_amount, BankReference interest_rate, int duration_value, 
+    public DepositPlan(int goal_id, double principal_amount, BankReference interest_rate, int duration_value, 
                         DurationUnit duration_unit, Frequency compounding_frequency, String start_date) 
     {
-        this.userId = user_id;
+        this.userId = Session.userId;
         this.goalId = goal_id;
         this.principalAmount = principal_amount;
         this.interestRate = interest_rate;
@@ -27,10 +30,10 @@ public class DepositPlan
         this.startDate = start_date;
     }
 
-    public DepositPlan(int user_id, double principal_amount, BankReference interest_rate, int duration_value, 
+    public DepositPlan(double principal_amount, BankReference interest_rate, int duration_value, 
                         DurationUnit duration_unit, Frequency compounding_frequency, String start_date) 
     {
-        this.userId = user_id;
+        this.userId = Session.userId;
         this.principalAmount = principal_amount;
         this.interestRate = interest_rate;
         this.durationValue = duration_value;
