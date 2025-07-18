@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import logic.InterestCalculator;
-import logic.InterestCalculator.DurationUnit;
-import logic.InterestCalculator.Frequency;
+import logic.TimeReference.DurationUnit;
+import logic.TimeReference.Frequency;
 import model.Investment;
 
 public class InvestmentDAO extends CrudDAO<Investment>{
@@ -42,13 +42,14 @@ public class InvestmentDAO extends CrudDAO<Investment>{
     {
         // Declare variables for storing values that will be retrieve in databae
         int userId = 0, principal = 0, durationValue = 0;
+        double interest = 0;
         String durationUnit = "", frequency= "", startDateStr = "";
 
         try(Connection conn = DatabaseInitializer.connect();)
         {
             String sqlGetLatestPlan = """
-                SELECT id, principal_amount, duration_value, duration_unit, 
-                        compounding_frequency, start_date
+                SELECT id, principal_amount, interest_rate, duration_value, 
+                duration_unit, compounding_frequency, start_date
                 FROM deposit_plan 
                 ORDER BY id DESC 
                 LIMIT 1
@@ -62,6 +63,7 @@ public class InvestmentDAO extends CrudDAO<Investment>{
             {
                 userId = rsGetID.getInt("id");
                 principal = rsGetID.getInt("principal_amount");
+                interest = rsGetID.getDouble("interest_rate");
                 durationValue = rsGetID.getInt("duration_value");
                 durationUnit = rsGetID.getString("duration_unit");
                 frequency = rsGetID.getString("compounding_frequency");
@@ -86,9 +88,9 @@ public class InvestmentDAO extends CrudDAO<Investment>{
             String maturityDate = endDate.toString();
 
             // For financial values
-            double maturityAmount = calc.maturityAmountWithTax(principal, 10, freqEnum, durationInYears);
-            double totalInterest = calc.totalTaxPaid(principal, 10, freqEnum, durationInYears);
-            double taxOnInterest = calc.totalInterest(principal, 10, freqEnum, durationInYears);
+            double maturityAmount = calc.maturityAmountWithTax(principal, interest, freqEnum, durationInYears);
+            double totalInterest = calc.totalTaxPaid(principal, interest, freqEnum, durationInYears);
+            double taxOnInterest = calc.totalInterest(principal, interest, freqEnum, durationInYears);
 
             Investment investment = new Investment(userId, maturityDate, maturityAmount, totalInterest, taxOnInterest);
             InvestmentDAO investmentDAO = new InvestmentDAO();

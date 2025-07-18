@@ -47,6 +47,7 @@ public class DatabaseInitializer {
                 user_id INT NOT NULL,
                 goal_id INT,
                 principal_amount DECIMAL(10, 2) NOT NULL,
+                interest_rate DECIMAL(10, 2) NOT NULL,
                 duration_value INT NOT NULL,
                 duration_unit TEXT NOT NULL,
                 compounding_frequency TEXT NOT NULL,
@@ -91,10 +92,10 @@ public class DatabaseInitializer {
                 sql += "goal;";
                 break;
             case "depositplan":
-                sql += "investments, goal, deposit_plan;";
+                sql += "goal, investments, deposit_plan;";
                 break;
             case "user":
-                sql += "investments, goal, deposit_plan, user;";
+                sql += "goal, investments, deposit_plan, user;";
                 break;
             default:
                 return;

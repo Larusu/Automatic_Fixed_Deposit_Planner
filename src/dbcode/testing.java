@@ -1,9 +1,10 @@
 package dbcode;
 
-import constant.AppConfig;
+//import constant.AppConfig;
 import logic.InterestCalculator;
-import logic.InterestCalculator.DurationUnit;
-import logic.InterestCalculator.Frequency;
+import logic.TimeReference.DurationUnit;
+import logic.TimeReference.Frequency;
+import model.BankReference;
 import model.DepositPlan;
 import model.User;
 
@@ -11,10 +12,9 @@ public class testing {
     
     public static void main(String[] args) {
         
-        // User user = new User("testing", "testing@gmail.com", "12345678");
-        // UserDAO users = new UserDAO();
-        // users.insert(user);
-
+        User user = new User("testing", "testing@gmail.com", "12345678");
+        UserDAO users = new UserDAO();
+        users.insert(user);
 
         InterestCalculator calc = new InterestCalculator();
         int principal = 5000;
@@ -33,14 +33,15 @@ public class testing {
 
         int useId = 1;
 
-        // DatabaseInitializer.ResetDB("depositplan");
-        // DepositPlan depositPlan = new DepositPlan(useId, 5000, 5, DurationUnit.YEARS, Frequency.QUARTERLY, "2025-08-10");
-        // DepositPlanDAO depositDAO = new DepositPlanDAO();
-        // depositDAO.insert(depositPlan);
+        DatabaseInitializer.ResetDB("depositplan");
+        DepositPlan depositPlan = new DepositPlan(useId, 5000, BankReference.BPI, 5, DurationUnit.YEARS, Frequency.QUARTERLY, "2025-08-10");
+        DepositPlanDAO depositDAO = new DepositPlanDAO();
+        depositDAO.insert(depositPlan);
 
-        // DatabaseInitializer.ResetDB("investments");
-        InvestmentDAO invest = new InvestmentDAO();
-        invest.calculateSQL();
+        DatabaseInitializer.ResetDB("goal"); System.out.println("reset done");
+        
+        // InvestmentDAO invest = new InvestmentDAO();
+        // invest.calculateSQL();
 
         DurationUnit unit = DurationUnit.find("Months");
         System.out.println(unit);
