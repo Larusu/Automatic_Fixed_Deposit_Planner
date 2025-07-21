@@ -81,8 +81,9 @@ public class DatabaseInitializer {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, 
             "The application failed to start properly.\nPlease restart the application.", 
-            "Startup Error", 
+            "Startup Error (Open XAMPP)", 
             JOptionPane.ERROR_MESSAGE);
+            return;
         }
     }
 
