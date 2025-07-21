@@ -3,16 +3,12 @@ package dbcode;
 import java.time.Duration;
 import java.util.Scanner;
 
-//import constant.AppConfig;
 import logic.InterestCalculator;
 import logic.TimeReference.DurationUnit;
-// import logic.TimeReference.DurationUnit;
 import logic.TimeReference.Frequency;
 import model.BankReference;
 import model.DepositPlan;
 import model.Investment;
-// import model.BankReference;
-// import model.DepositPlan;
 import model.User;
 import session.Session;
 

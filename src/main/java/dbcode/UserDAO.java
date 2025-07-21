@@ -30,6 +30,7 @@ public class UserDAO extends CrudDAO<User> {
         fields.add(u.getUsername());
         fields.add(u.getEmail());
         fields.add(u.getPassword());
+        
 
         return fields;
     }

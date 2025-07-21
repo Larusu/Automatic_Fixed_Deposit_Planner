@@ -2,6 +2,7 @@ package logic;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 import logic.TimeReference.Frequency;
 
 public class InterestCalculator{
