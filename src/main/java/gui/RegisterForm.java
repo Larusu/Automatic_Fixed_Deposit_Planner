@@ -4,6 +4,9 @@ import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import dbcode.UserDAO;
+import model.User;
+
 public class RegisterForm extends javax.swing.JFrame {
     
     public RegisterForm() {
@@ -256,16 +259,27 @@ public class RegisterForm extends javax.swing.JFrame {
 
     private void roundedButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roundedButton1ActionPerformed
         try {
+            String username = usernameField.getText().trim();
             String email = usernameField.getText().trim();
             String password = new String(passwordField.getPassword()).trim();
 
             if (email.isEmpty() || email.equals("Enter your email") ||
-                password.isEmpty() || password.equals("Enter your password")) {
+                password.isEmpty() || password.equals("Enter your password") ||
+                username.isEmpty() || username.equals("Enter your username")) {
                 JOptionPane.showMessageDialog(this, "Please fill in all the fields.", "Login Failed", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            //Validate here yung user email/phone and password para makalogin. If success, then new Dashboard()
+            User user = new User(username, email, password);
+            UserDAO userDAO = new UserDAO();
+            userDAO.register(user);
+            
+            // java.awt.EventQueue.invokeLater(new Runnable() {
+            // public void run()
+            // {
+            //     new Dashboard().setVisible(true);
+            // }
+            // });
             
         } catch (Exception e) {
             e.printStackTrace(); 

@@ -4,6 +4,9 @@ import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import dbcode.UserDAO;
+import model.User;
+
 public class LoginForm extends javax.swing.JFrame {
     
     public LoginForm() {
@@ -240,7 +243,16 @@ public class LoginForm extends javax.swing.JFrame {
                 return;
             }
 
-            //Validate here yung user email/phone and password para makalogin. If success, then new Dashboard()
+            User user = new User(email, password);
+            UserDAO userDAO = new UserDAO();
+            userDAO.login(user);
+
+            // java.awt.EventQueue.invokeLater(new Runnable() {
+            // public void run()
+            // {
+            //     new Dashboard().setVisible(true);
+            // }
+            // });
             
         } catch (Exception e) {
             e.printStackTrace(); 
