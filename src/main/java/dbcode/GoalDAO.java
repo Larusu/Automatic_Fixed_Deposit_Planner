@@ -32,7 +32,7 @@ public class GoalDAO extends CrudDAO<Goal>{
         return fields;
     }
 
-    ArrayList<Goal> getAllGoal()
+    ArrayList<Goal> getAllGoals()
     {
         ArrayList<Goal> goal = new ArrayList<>();
 
@@ -42,7 +42,7 @@ public class GoalDAO extends CrudDAO<Goal>{
             String sql = "SELECT id, name FROM goal";
             ResultSet rs = stmt.executeQuery(sql);
 
-            if(rs.next())
+            while(rs.next())
             {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
