@@ -12,7 +12,7 @@ public class InterestCalculator{
     // "https://www.philstar.com/business/2025/07/14/2457715/banks-slap-uniform-20-tax-interest-income"
     private final double taxRate = 20; // 20% final withholding tax on bank interest
 
-    public double maturityAmount(int principal, double rate, Frequency duration, double time)
+    public double maturityAmount(double principal, double rate, Frequency duration, double time)
     {
         int freq = duration.getFrequency();            
         if(freq == 0) return 0;                        
@@ -27,7 +27,7 @@ public class InterestCalculator{
         return BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue(); 
     }
 
-    public double maturityAmountWithTax(int principal, double rate, Frequency duration, double time)
+    public double maturityAmountWithTax(double principal, double rate, Frequency duration, double time)
     {
         int freq = duration.getFrequency();
         if(freq == 0) return 0;
@@ -41,14 +41,14 @@ public class InterestCalculator{
     } 
 
     // Calculates the total tax paid based on the difference between gross and net maturity amounts
-    public double totalTaxPaid(int principal, double rate, Frequency duration, double time)
+    public double totalTaxPaid(double principal, double rate, Frequency duration, double time)
     {
         double d = maturityAmount(principal, rate, duration, time) - maturityAmountWithTax(principal, rate, duration, time);
         return BigDecimal.valueOf(d).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     // Calculates the total interest earned before tax, based on the maturity amount minus the principal.
-    public double totalInterest(int principal, double rate, Frequency duration, double time)
+    public double totalInterest(double principal, double rate, Frequency duration, double time)
     {
         double i = maturityAmount(principal, rate, duration, time) - principal;
         return BigDecimal.valueOf(i).setScale(2, RoundingMode.HALF_UP).doubleValue();

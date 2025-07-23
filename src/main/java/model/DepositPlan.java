@@ -1,7 +1,5 @@
 package model;
 
-import logic.TimeReference.DurationUnit;
-import logic.TimeReference.Frequency;
 import session.Session;
 
 public class DepositPlan 
@@ -10,14 +8,14 @@ public class DepositPlan
     private int userId = 0;
     private int goalId = 0;
     private double principalAmount = 0;
-    private BankReference interestRate;
+    private double interestRate;
     private int durationValue = 0;
-    private DurationUnit durationUnit;
-    private Frequency compoundingFrequency;
+    private String durationUnit;
+    private String compoundingFrequency;
     private String startDate = "";
 
-    public DepositPlan(String name, int goal_id, double principal_amount, BankReference interest_rate, int duration_value, 
-                        DurationUnit duration_unit, Frequency compounding_frequency, String start_date) 
+    public DepositPlan(String name, int goal_id, double principal_amount, double interest_rate, int duration_value, 
+                        String duration_unit, String compounding_frequency, String start_date) 
     {
         this.name = name;
         this.userId = Session.userId;
@@ -30,8 +28,8 @@ public class DepositPlan
         this.startDate = start_date;
     }
 
-    public DepositPlan(String name, double principal_amount, BankReference interest_rate, int duration_value, 
-                        DurationUnit duration_unit, Frequency compounding_frequency, String start_date) 
+    public DepositPlan(String name, double principal_amount, double interest_rate, int duration_value, 
+                        String duration_unit, String compounding_frequency, String start_date) 
     {
         this.name = name;
         this.userId = Session.userId;
@@ -47,9 +45,9 @@ public class DepositPlan
     public int getUserId() { return userId;}
     public int getGoalId() { return goalId;}
     public double getPrincipalAmount() { return principalAmount;}
-    public double getInterestRate() { return interestRate.getRate();}
+    public double getInterestRate() { return interestRate;}
     public int getDurationValue() { return durationValue;}
-    public String getDurationUnit() { return durationUnit.name();}
-    public String getCompoundingFrequency() { return compoundingFrequency.toString();}
+    public String getDurationUnit() { return durationUnit;}
+    public String getCompoundingFrequency() { return compoundingFrequency;}
     public String getStartDate() { return startDate;}
 }

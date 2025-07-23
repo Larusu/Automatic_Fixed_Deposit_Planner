@@ -1,5 +1,5 @@
 import dbcode.DatabaseInitializer;
-import gui.LoginForm;
+// import gui.LoginForm;
 
 public class Main {
     
@@ -7,12 +7,12 @@ public class Main {
         
         DatabaseInitializer.initializeDatabase();
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run()
-            {
-                new LoginForm().setVisible(true);
-            }
-        });
+        // java.awt.EventQueue.invokeLater(new Runnable() {
+        //     public void run()
+        //     {
+        //         new LoginForm().setVisible(true);
+        //     }
+        // });
     }
 }
 // import java.util.Properties;

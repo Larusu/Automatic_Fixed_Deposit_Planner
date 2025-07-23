@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
+
+import session.Session;
 
 public abstract class CrudDAO<T> {
 
@@ -107,6 +110,40 @@ public abstract class CrudDAO<T> {
             JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
+    }
+
+    public List<Object[]> getAllData() throws SQLException
+    {
+        List<Object[]> rows = new ArrayList<>();
+        String columns[] = getColumnName().split(",");
+        String sql = "SELECT * FROM " + getTableName() + " WHERE id = ?";
+
+        try(Connection conn = DatabaseInitializer.connect();
+        PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1, Session.userId);
+
+            ResultSet rs = pstmt.executeQuery(sql);
+            while(rs.next())
+            {
+                Object[] row = new Object[columns.length];
+
+                for(int i = 0; i < columns.length; i++)
+                {
+                    row[i] = rs.getObject(columns[i].trim());
+                }
+                rows.add(row);
+            }
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(null, 
+            "We couldn't retrieve all the data.\nPlease try again later.", 
+            "Retrieving Failed", 
+            JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+        return rows;
     }
 
     private boolean validateColumnName(String columnName) {
