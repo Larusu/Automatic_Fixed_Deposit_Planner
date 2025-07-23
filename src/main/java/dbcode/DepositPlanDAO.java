@@ -21,6 +21,13 @@ public class DepositPlanDAO extends CrudDAO<DepositPlan> {
         return "name, user_id, goal_id, principal_amount, interest_rate, duration_value, duration_unit," +
                 " compounding_frequency, start_date";
     }
+
+    @Override
+    protected String whereClauseForGetAllData()
+    {
+        return "user_id";
+    }
+
     @Override
     protected ArrayList<Object> InsertData(DepositPlan d) 
     {

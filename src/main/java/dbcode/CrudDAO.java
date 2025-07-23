@@ -17,6 +17,8 @@ public abstract class CrudDAO<T> {
 
     protected abstract String getColumnName();
 
+    protected String whereClauseForGetAllData(){ return "id"; }
+
     protected abstract ArrayList<Object> InsertData(T elements);
 
     public void insert(T elements) {
@@ -114,16 +116,16 @@ public abstract class CrudDAO<T> {
 
     public List<Object[]> getAllData() throws SQLException
     {
-        List<Object[]> rows = new ArrayList<>();
-        String columns[] = getColumnName().split(",");
-        String sql = "SELECT * FROM " + getTableName() + " WHERE id = ?";
+        List<Object[]> data = new ArrayList<>();
+        String[] columns = getColumnName().split(",");
+        String sql = "SELECT * FROM " + getTableName() + " WHERE " + whereClauseForGetAllData() + " = ?";
 
         try(Connection conn = DatabaseInitializer.connect();
         PreparedStatement pstmt = conn.prepareStatement(sql))
         {
             pstmt.setInt(1, Session.userId);
 
-            ResultSet rs = pstmt.executeQuery(sql);
+            ResultSet rs = pstmt.executeQuery();
             while(rs.next())
             {
                 Object[] row = new Object[columns.length];
@@ -132,7 +134,7 @@ public abstract class CrudDAO<T> {
                 {
                     row[i] = rs.getObject(columns[i].trim());
                 }
-                rows.add(row);
+                data.add(row);
             }
         }
         catch(SQLException e)
@@ -143,7 +145,7 @@ public abstract class CrudDAO<T> {
             JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-        return rows;
+        return data;
     }
 
     private boolean validateColumnName(String columnName) {

@@ -22,6 +22,12 @@ public class GoalDAO extends CrudDAO<Goal>{
     }
 
     @Override
+    protected String whereClauseForGetAllData()
+    {
+        return "user_id";
+    }
+
+    @Override
     protected ArrayList<Object> InsertData(Goal g) {
 
        ArrayList<Object> fields = new ArrayList<>();
