@@ -60,7 +60,7 @@ public class DepositPlanDAO extends CrudDAO<DepositPlan> {
                                i.maturity_amount
                         FROM deposit_plan d
                         LEFT JOIN investments i ON i.deposit_id = d.id
-                        LEFT JOIN goal g ON d.goal_id = g.id;
+                        LEFT JOIN goal g ON d.goal_id = g.id
                         WHERE d.user_id = ?;
                     """;
 
