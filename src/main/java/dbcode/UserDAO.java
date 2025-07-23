@@ -35,7 +35,7 @@ public class UserDAO extends CrudDAO<User> {
         return fields;
     }
 
-    public void register(User element)
+    public void register(User element) throws Exception
     {
         String email = element.getEmail();
         String checkSQL = "SELECT email FROM user WHERE email = ?";
@@ -53,7 +53,7 @@ public class UserDAO extends CrudDAO<User> {
                 "The email " + email + " is already registered.", 
                 "Email Already In use!", 
                 JOptionPane.ERROR_MESSAGE);
-                return;
+                throw new Exception("Unexpected Error Occured");
             }
             System.out.println("Register successful!");
             this.insert(element);
@@ -68,7 +68,7 @@ public class UserDAO extends CrudDAO<User> {
         }
     }
 
-    public void login(User element)
+    public void login(User element) throws Exception
     {
         String email = element.getEmail();
         String password = element.getPassword();
@@ -87,7 +87,7 @@ public class UserDAO extends CrudDAO<User> {
                 "No account found with that email.",
                 "Login Failed",
                 JOptionPane.ERROR_MESSAGE);
-                return;
+                throw new Exception("Unexpected Error Occured");
             }
 
             String storedPassword = rs.getString("password");
@@ -99,7 +99,7 @@ public class UserDAO extends CrudDAO<User> {
                 "Incorrect password. Please try again.",
                 "Login Failed",
                 JOptionPane.ERROR_MESSAGE);
-                return;
+                throw new Exception("Unexpected Error Occured");
             }
 
             // for changing session's user
