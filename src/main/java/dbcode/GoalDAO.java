@@ -1,12 +1,13 @@
 package dbcode;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import model.Goal;
+import session.Session;
 
 public class GoalDAO extends CrudDAO<Goal>{
 
@@ -17,13 +18,14 @@ public class GoalDAO extends CrudDAO<Goal>{
 
     @Override
     protected String getColumnName() {
-        return "name, timeframe_value, timeframe_unit, price";
+        return "user_id, name, timeframe_value, timeframe_unit, price";
     }
 
     @Override
     protected ArrayList<Object> InsertData(Goal g) {
 
        ArrayList<Object> fields = new ArrayList<>();
+        fields.add(g.getUserId());
         fields.add(g.getName());
         fields.add(g.getTimeframeValue());
         fields.add(g.getTimeframeUnit());
@@ -32,16 +34,16 @@ public class GoalDAO extends CrudDAO<Goal>{
         return fields;
     }
 
-    ArrayList<Goal> getAllGoals()
+    public ArrayList<Goal> getAllGoals()
     {
         ArrayList<Goal> goal = new ArrayList<>();
+        String sql = "SELECT id, name FROM goal WHERE user_id = ?";
 
         try(Connection conn = DatabaseInitializer.connect();
-        Statement stmt = conn.createStatement();)
+        PreparedStatement pstmt = conn.prepareStatement(sql);)
         {
-            String sql = "SELECT id, name FROM goal";
-            ResultSet rs = stmt.executeQuery(sql);
-
+            pstmt.setInt(1, Session.userId);
+            ResultSet rs = pstmt.executeQuery(sql);
             while(rs.next())
             {
                 int id = rs.getInt("id");

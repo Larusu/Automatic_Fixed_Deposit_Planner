@@ -74,10 +74,10 @@ public abstract class CrudDAO<T> {
         String sqlUpdate = "UPDATE " + getTableName() + " SET " + getPlaceholder(columnName) + "  WHERE id = ?";
         try (Connection conn = DatabaseInitializer.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sqlUpdate)) {
-
             for (int i = 0; i < newValue.size(); i++) {
                 pstmt.setObject(i + 1, newValue.get(i));
             }
+            pstmt.setInt(newValue.size() + 1, id);
             pstmt.executeUpdate();
 
             System.out.println("Updated row with id " + id);

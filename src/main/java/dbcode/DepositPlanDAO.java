@@ -18,13 +18,14 @@ public class DepositPlanDAO extends CrudDAO<DepositPlan> {
     @Override
     protected String getColumnName() 
     {
-        return "user_id, goal_id, principal_amount, interest_rate, duration_value, duration_unit," +
+        return "name, user_id, goal_id, principal_amount, interest_rate, duration_value, duration_unit," +
                 " compounding_frequency, start_date";
     }
     @Override
     protected ArrayList<Object> InsertData(DepositPlan d) 
     {
         ArrayList<Object> fields = new ArrayList<>();
+        fields.add(d.getName());
         fields.add(d.getUserId());
         fields.add(d.getGoalId() == 0 ? null : d.getGoalId());
         fields.add(d.getPrincipalAmount());

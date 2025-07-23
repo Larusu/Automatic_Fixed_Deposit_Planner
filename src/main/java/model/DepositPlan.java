@@ -6,6 +6,7 @@ import session.Session;
 
 public class DepositPlan 
 {
+    private String name = "";
     private int userId = 0;
     private int goalId = 0;
     private double principalAmount = 0;
@@ -15,9 +16,10 @@ public class DepositPlan
     private Frequency compoundingFrequency;
     private String startDate = "";
 
-    public DepositPlan(int goal_id, double principal_amount, BankReference interest_rate, int duration_value, 
+    public DepositPlan(String name, int goal_id, double principal_amount, BankReference interest_rate, int duration_value, 
                         DurationUnit duration_unit, Frequency compounding_frequency, String start_date) 
     {
+        this.name = name;
         this.userId = Session.userId;
         this.goalId = goal_id;
         this.principalAmount = principal_amount;
@@ -28,9 +30,10 @@ public class DepositPlan
         this.startDate = start_date;
     }
 
-    public DepositPlan(double principal_amount, BankReference interest_rate, int duration_value, 
+    public DepositPlan(String name, double principal_amount, BankReference interest_rate, int duration_value, 
                         DurationUnit duration_unit, Frequency compounding_frequency, String start_date) 
     {
+        this.name = name;
         this.userId = Session.userId;
         this.principalAmount = principal_amount;
         this.interestRate = interest_rate;
@@ -40,12 +43,13 @@ public class DepositPlan
         this.startDate = start_date;
     }
 
+    public String getName() { return name; }
     public int getUserId() { return userId;}
     public int getGoalId() { return goalId;}
     public double getPrincipalAmount() { return principalAmount;}
     public double getInterestRate() { return interestRate.getRate();}
     public int getDurationValue() { return durationValue;}
-    public String getDurationUnit() { return durationUnit.toString();}
+    public String getDurationUnit() { return durationUnit.name();}
     public String getCompoundingFrequency() { return compoundingFrequency.toString();}
     public String getStartDate() { return startDate;}
 }

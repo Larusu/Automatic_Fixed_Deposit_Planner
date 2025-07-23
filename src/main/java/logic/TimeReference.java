@@ -10,10 +10,7 @@ public class TimeReference
         ANNUALLY("Annually", 1),
         SEMIANNUALLY("Semiannually", 2),
         QUARTERLY("Quarterly", 6),
-        MONTHLY("Monthly", 12),
-        BIWEEKLY("Biweekly", 26),
-        WEEKLY("Weekly", 52),
-        DAILY("Daily", 365);
+        MONTHLY("Monthly", 12);
 
         private final String label;
         private final int frequency;

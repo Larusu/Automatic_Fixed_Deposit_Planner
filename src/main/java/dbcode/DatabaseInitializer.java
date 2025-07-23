@@ -36,16 +36,19 @@ public class DatabaseInitializer {
             String goal = """
                 CREATE TABLE IF NOT EXISTS goal (
                 id INT PRIMARY KEY AUTO_INCREMENT,
+                user_id INT NOT NULL,
                 name VARCHAR(255) NOT NULL,
                 timeframe_value INT NOT NULL,
                 timeframe_unit TEXT NOT NULL,
-                price DECIMAL(10, 2) NOT NULL
+                price DECIMAL(10, 2) NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES user(id)
                 );
             """;
 
             String deposit = """ 
                 CREATE TABLE IF NOT EXISTS deposit_plan (
                 id INT PRIMARY KEY AUTO_INCREMENT,
+                name VARCHAR(99) NOT NULL,
                 user_id INT NOT NULL,
                 goal_id INT,
                 principal_amount DECIMAL(10, 2) NOT NULL,
