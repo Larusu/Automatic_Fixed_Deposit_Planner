@@ -1,11 +1,18 @@
 package dbcode;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import logic.TimeReference.Frequency;
 import model.DepositPlan;
+import session.Session;
 
 public class DepositPlanDAO extends CrudDAO<DepositPlan> {
 
@@ -46,23 +53,52 @@ public class DepositPlanDAO extends CrudDAO<DepositPlan> {
     }
 
     @Override
-    public void insert(DepositPlan depositPlan) {
+    public List<Object[]> getAllData() throws SQLException
+    {
+        List<Object[]> data = new ArrayList<>();
 
-        int durationInMonths = (depositPlan.getDurationUnit().equalsIgnoreCase("months"))  
-                        ? depositPlan.getDurationValue()
-                        : depositPlan.getDurationValue() * 12;
+        String sql = """
+                        SELECT d.name, d.principal_amount, d.interest_rate, i.total_interest, d.duration_value, 
+                               d.duration_unit, g.name AS goal_name, d.start_date, i.maturity_date, 
+                               i.maturity_amount
+                        FROM deposit_plan d
+                        LEFT JOIN investments i ON i.deposit_id = d.id
+                        LEFT JOIN goal g ON d.goal_id = g.id;
+                        WHERE d.user_id = ?;
+                    """;
 
-        Frequency freq = Frequency.find(depositPlan.getCompoundingFrequency());
+        try(Connection conn = DatabaseInitializer.connect();
+        PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setInt(1, Session.userId);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                Object[] row = new Object[9];
 
-        if ((12 / freq.getFrequency()) > durationInMonths) {
-            JOptionPane.showMessageDialog(null,
-                "The compounding frequency is longer than the deposit plan duration.",
-                "Invalid Compounding Frequency",
-                JOptionPane.WARNING_MESSAGE
-            );
-            return;
+                row[0] = rs.getString("name");
+                row[1] = rs.getString("principal_amount");
+                row[2] = rs.getString("interest_rate");
+                row[3] = rs.getString("total_interest");
+                row[4] = rs.getString("duration_value") + " " 
+                       + rs.getString("duration_unit");
+                row[5] = rs.getString("goal_name");
+                row[6] = rs.getString("start_date");
+                row[7]= rs.getString("maturity_date");
+                row[8] = rs.getString("maturity_amount");
+
+                data.add(row);
+            }
         }
-
-        super.insert(depositPlan);
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(null, 
+            "We couldn't retrieve all the data.\nPlease try again later.", 
+            "Retrieving Failed", 
+            JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+        return data;
     }
+    
 }
