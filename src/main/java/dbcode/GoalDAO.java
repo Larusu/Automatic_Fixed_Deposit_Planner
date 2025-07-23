@@ -49,7 +49,7 @@ public class GoalDAO extends CrudDAO<Goal>{
         PreparedStatement pstmt = conn.prepareStatement(sql);)
         {
             pstmt.setInt(1, Session.userId);
-            ResultSet rs = pstmt.executeQuery(sql);
+            ResultSet rs = pstmt.executeQuery();
             while(rs.next())
             {
                 int id = rs.getInt("id");
