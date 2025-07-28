@@ -4,10 +4,9 @@
 </h1>
 BluPlan is a Java-based application that helps users plan and manage fixed deposit accounts through a graphical interace. This project was developed as for the final project for our Object-Oriented Programming subject, demonstrating full CRUD operations, database integrations with MySQL, and GUI development using Java Swing.
 ### 👨‍💻Developed by:
+
 [JhervisArevalo](https://github.com/JhervisArevalo)
-
 [Larusu](https://github.com/Larusu)
-
 [watercress](https://github.com/waterrcress)
 
 ## 📝 Features
