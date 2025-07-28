@@ -5,22 +5,45 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.JOptionPane;
-
 public class DatabaseInitializer {
 
+    private static final String MYSQL_ROOT_URL = "jdbc:mysql://localhost:3306/";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/planner_db"; // xampp
-    private static final String Username = "root";
-    private static final String Password = "";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "";
 
     static Connection connect() throws SQLException
     {
-        Connection conn = DriverManager.getConnection(DB_URL, Username, Password);
+        Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
         return conn;
+    }
+
+    private static void createDatabaseIfNotExists() throws SQLException
+    {
+        try(Connection conn = DriverManager.getConnection(MYSQL_ROOT_URL, USERNAME, PASSWORD); 
+            Statement stmt = conn.createStatement())
+        {
+            String sql = "CREATE DATABASE IF NOT EXISTS planner_db;";
+            stmt.executeUpdate(sql);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            throw new SQLException("Failed to create database", e);
+        }
     }
 
     public static void initializeDatabase()
     {
+        try 
+        {
+            createDatabaseIfNotExists();
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize database", e);
+        }
+
         try(Connection conn = connect(); 
             Statement stmt = conn.createStatement();)
         { 
@@ -82,11 +105,7 @@ public class DatabaseInitializer {
         }catch(SQLException e)
         {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, 
-            "The application failed to start properly.\nPlease restart the application.", 
-            "Startup Error (Open XAMPP)", 
-            JOptionPane.ERROR_MESSAGE);
-            return;
+            throw new RuntimeException("Failed to initialize database", e);
         }
     }
 
