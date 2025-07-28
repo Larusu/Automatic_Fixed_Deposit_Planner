@@ -1,7 +1,7 @@
-# BluPlan: Automated Fixed Deposit Planner (Java + Swing GUI)
-<p align="center">
-  <img src="./assets/logo.png" alt="BluPlan Logo" width="200"/>
-</p>
+<h1>
+  <img src="./assets/logo.png" alt="BluPlan Logo" width="40" style="vertical-align: middle;"/>
+  BluPlan: Automated Fixed Deposit Planner
+</h1>
 BluPlan is a Java-based application that helps users plan and manage fixed deposit accounts through a graphical interace. This project was developed as for the final project for our Object-Oriented Programming subject, demonstrating full CRUD operations, database integrations with MySQL, and GUI development using Java Swing.
 ### 👨‍💻Developed by:
 [JhervisArevalo](https://github.com/JhervisArevalo)
