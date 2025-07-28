@@ -1,5 +1,5 @@
 import dbcode.DatabaseInitializer;
-import gui.LoginForm;
+import gui.SplashScreen;
 
 public class Main 
 {
@@ -11,8 +11,8 @@ public class Main
             DatabaseInitializer.initializeDatabase();
 
             java.awt.EventQueue.invokeLater(() -> {
-            new LoginForm().setVisible(true);
-        });
+                 new SplashScreen().setVisible(true);
+            });
         } 
         catch(Exception e)
         {
