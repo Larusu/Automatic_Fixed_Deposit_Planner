@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class DatabaseInitializer {
 
-    private static final String MYSQL_ROOT_URL = "jdbc:mysql://localhost:3306/";
+    private static final String ROOT_URL = "jdbc:mysql://localhost:3306/";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/planner_db"; // xampp
     private static final String USERNAME = "root";
     private static final String PASSWORD = "";
@@ -20,7 +20,7 @@ public class DatabaseInitializer {
 
     private static void createDatabaseIfNotExists() throws SQLException
     {
-        try(Connection conn = DriverManager.getConnection(MYSQL_ROOT_URL, USERNAME, PASSWORD); 
+        try(Connection conn = DriverManager.getConnection(ROOT_URL, USERNAME, PASSWORD); 
             Statement stmt = conn.createStatement())
         {
             String sql = "CREATE DATABASE IF NOT EXISTS planner_db;";
