@@ -27,7 +27,6 @@ public class RoundedButton2 extends JButton {
         setFont(new Font("Segoe UI", Font.BOLD, 14));
         setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Hover effect
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -40,7 +39,7 @@ public class RoundedButton2 extends JButton {
             }
         });
 
-        setBackground(backgroundColor); // Initial color
+        setBackground(backgroundColor); 
     }
 
     public void setCornerRadius(int radius) {
@@ -50,7 +49,7 @@ public class RoundedButton2 extends JButton {
 
     public void setBackgroundColor(Color color) {
         this.backgroundColor = color;
-        setBackground(color); // for hover toggle
+        setBackground(color); 
         repaint();
     }
 
@@ -60,7 +59,6 @@ public class RoundedButton2 extends JButton {
 
     @Override
     protected void paintComponent(Graphics g) {
-        // Draw rounded background
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -69,15 +67,6 @@ public class RoundedButton2 extends JButton {
 
         super.paintComponent(g2);
         g2.dispose();
-    }
-
-    @Override
-    protected void paintBorder(Graphics g) {
-        // Optional: paint a rounded border
-        // Graphics2D g2 = (Graphics2D) g.create();
-        // g2.setColor(Color.DARK_GRAY);
-        // g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, cornerRadius, cornerRadius);
-        // g2.dispose();
     }
 }
 

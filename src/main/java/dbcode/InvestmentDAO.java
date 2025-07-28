@@ -1,6 +1,7 @@
 package dbcode;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -41,13 +42,33 @@ public class InvestmentDAO extends CrudDAO<Investment>{
 
         return fields;
     }
+    
+    @Override
+    public void delete(int id) {
+        // Deleting an entire row based on the id
+        String sqlDelete = "DELETE FROM " + getTableName() + " WHERE deposit_id = ?";
+        try (Connection conn = DatabaseInitializer.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sqlDelete)) {
+
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Deleted row from " + getTableName() + " where id = " + id);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+            "We couldn't delete the item.\nPlease try again later.", 
+            "Delete Failed", 
+            JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
 
     public void calculateSQL()
     {
         // Declare variables for storing values that will be retrieve in databae
         int userId = Session.userId; 
-        int principal = 0, durationValue = 0;
-        double interest = 0;
+        int durationValue = 0;
+        double interest = 0, principal = 0;
         String durationUnit = "", frequency= "", startDateStr = "";
 
         if (Session.userId == -1) {
@@ -75,7 +96,7 @@ public class InvestmentDAO extends CrudDAO<Investment>{
             if (rsGetID.next()) 
             {
                 userId = rsGetID.getInt("id");
-                principal = rsGetID.getInt("principal_amount");
+                principal = rsGetID.getDouble("principal_amount");
                 interest = rsGetID.getDouble("interest_rate");
                 durationValue = rsGetID.getInt("duration_value");
                 durationUnit = rsGetID.getString("duration_unit");

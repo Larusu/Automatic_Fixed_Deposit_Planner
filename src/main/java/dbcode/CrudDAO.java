@@ -75,6 +75,7 @@ public abstract class CrudDAO<T> {
         if ((columnName.size() != newValue.size()) || !validateColumnName(columnName)) {
             System.err.println("Error input on updateField()");
             return;
+            
         }
         String sqlUpdate = "UPDATE " + getTableName() + " SET " + getPlaceholder(columnName) + "  WHERE id = ?";
         try (Connection conn = DatabaseInitializer.connect();

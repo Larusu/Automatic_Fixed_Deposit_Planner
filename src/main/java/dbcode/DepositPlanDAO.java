@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JOptionPane;
 import model.DepositPlan;
 import session.Session;
@@ -55,9 +54,9 @@ public class DepositPlanDAO extends CrudDAO<DepositPlan> {
         List<Object[]> data = new ArrayList<>();
 
         String sql = """
-                        SELECT d.name, d.principal_amount, d.interest_rate, i.total_interest, d.duration_value, 
-                               d.duration_unit, g.name AS goal_name, d.start_date, i.maturity_date, 
-                               i.maturity_amount
+                        SELECT d.id, d.name, d.principal_amount, d.interest_rate, i.total_interest, i.estimated_tax, 
+                               d.duration_value, d.duration_unit, g.name AS goal_name, d.start_date, i.maturity_date, 
+                               i.maturity_amount 
                         FROM deposit_plan d
                         LEFT JOIN investments i ON i.deposit_id = d.id
                         LEFT JOIN goal g ON d.goal_id = g.id
@@ -71,18 +70,20 @@ public class DepositPlanDAO extends CrudDAO<DepositPlan> {
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
             {
-                Object[] row = new Object[9];
+                Object[] row = new Object[11];
 
-                row[0] = rs.getString("name");
-                row[1] = rs.getString("principal_amount");
-                row[2] = rs.getString("interest_rate");
-                row[3] = rs.getString("total_interest");
-                row[4] = rs.getString("duration_value") + " " 
+                row[0] = rs.getInt("id");
+                row[1] = rs.getString("name");
+                row[2] = "P" + rs.getString("principal_amount");
+                row[3] = rs.getString("interest_rate");
+                row[4] = "P" + rs.getString("total_interest");
+                row[5] = "P" + rs.getString("estimated_tax");
+                row[6] = rs.getString("duration_value") + " " 
                        + rs.getString("duration_unit");
-                row[5] = rs.getString("goal_name");
-                row[6] = rs.getString("start_date");
-                row[7]= rs.getString("maturity_date");
-                row[8] = rs.getString("maturity_amount");
+                row[7] = rs.getString("goal_name");
+                row[8] = rs.getString("start_date");
+                row[9]= rs.getString("maturity_date");
+                row[10] = "P" + rs.getString("maturity_amount");
 
                 data.add(row);
             }

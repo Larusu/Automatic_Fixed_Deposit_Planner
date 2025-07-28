@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 import model.Goal;
 import session.Session;
@@ -40,6 +42,30 @@ public class GoalDAO extends CrudDAO<Goal>{
         return fields;
     }
 
+    @Override
+    public void delete(int id) {
+        // Deleting an entire row based on the id
+        String sqlDelete = "DELETE FROM " + getTableName() + " WHERE id = ?";
+        try (Connection conn = DatabaseInitializer.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sqlDelete)) {
+
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Deleted row from " + getTableName() + " where id = " + id);
+        } catch (SQLException e) {
+            int errorCode = e.getErrorCode();       
+            String sqlState = e.getSQLState();      
+            String errorMsg = e.getMessage().toLowerCase();
+            if(errorCode == 1451 || "23000".equals(sqlState) || errorMsg.contains("foreign key"))
+            {
+                throw new RuntimeException("Foreign key constraint violation: Please delete related records first.");
+            }
+            e.printStackTrace();
+            throw new RuntimeException("We couldn't delete the item.\nPlease try again later.", e);
+        }
+    }
+    
     public ArrayList<Goal> getAllGoals()
     {
         ArrayList<Goal> goal = new ArrayList<>();
@@ -67,5 +93,38 @@ public class GoalDAO extends CrudDAO<Goal>{
         }
 
         return goal;
+    }
+    
+    @Override
+    public List<Object[]> getAllData() throws SQLException
+    {
+        List<Object[]> data = new ArrayList<>();
+        
+        String sql = "SELECT id, name, timeframe_value, timeframe_unit, price FROM " + getTableName() + " WHERE user_id = ?";
+        try(Connection conn = DatabaseInitializer.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql);)
+        {
+            pstmt.setInt(1, Session.userId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while(rs.next())
+            {
+                Object[] row = new Object[4];
+                row[0] = rs.getInt("id");
+                row[1] = rs.getString("name");
+                row[2] = rs.getString("timeframe_value") + " " + rs.getString("timeframe_unit");
+                row[3] = "P" + rs.getString("price");
+                data.add(row);
+            }
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(null, 
+            "We couldn't retrieve all the data.\nPlease try again later.", 
+            "Retrieving Failed", 
+            JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+        return data;
     }
 }
